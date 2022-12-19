@@ -1,0 +1,74 @@
+@startuml
+class Vector2D {
+    + Vector2D(x: integer, y: integer)
+    + getX(): integer
+    + getY(): integer
+}
+
+class Fraction {
+    - numerator: integer
+    - denominator: integer
+    + Fraction(numerator: integer, denominator: integer)
+    + toString(): text
+}
+
+interface ReadonlyField {
+    + toString(): text
+}
+
+class Field implements ReadonlyField {
+    - value: Fraction
+    + toString(): text
+    + setRandomValue(): void
+    + setZero(): void
+}
+Field "1" *-- "1" Fraction
+
+interface ReadonlyCharacter {
+    + getPoints(): integer
+    + getPosition(): Vector2D
+}
+
+class Character implements ReadonlyCharacter {
+    - points: integer
+    - position: Vector2D
+    + incrementPoints(inc: integer): void
+    + getPoints(): integer
+    + getPosition(): Vector2D
+}
+Character "1" *-- "1" Vector2D
+
+class Board {
+    - characterB: Character
+    - characterW: Character
+    - fields: DoublyLinkedList<Field>
+}
+Board "1" *-- "2" Character
+Board "1" *-- "64" Field
+
+class GameScreen {
+    + draw(fields: DoublyLinkedList<ReadonlyField>, characterB: ReadonlyCharacter, characterW: ReadonlyCharacter, nextMove: CharacterKind): void
+    + getNextMove(): Move
+}
+
+class Move {
+    +Move(characterKind: CharacterKind, to: Vector2D)
+    +characterKind CharacterKind
+    +target Vector2D
+}
+Move "1" *-- "1" Vector2D
+Move "1" *-- "1" CharacterKind
+
+class Controller {
+    -gameScreen: GameScreen
+    -board: Board
+}
+Controller "1" *-- "1" GameScreen
+Controller "1" *-- "1" Board
+
+enum CharacterKind {
+    B
+    W
+}
+
+@enduml
