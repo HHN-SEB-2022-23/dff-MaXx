@@ -1,6 +1,8 @@
 package de.hhn;
 
-public interface ReadOnlyCharacter {
+import de.hhn.lib.Vector2D;
 
-    public String toString();
+public interface ReadOnlyCharacter {
+    Fraction getPoints();
+    Vector2D getPosition();
 }

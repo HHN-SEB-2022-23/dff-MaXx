@@ -2,26 +2,25 @@ package de.hhn;
 
 import de.hhn.services.RandomFractionService;
 
-public class Field implements ReadOnlyField{
+public class Field implements ReadOnlyField {
 
-private Fraction value;
+    private static final RandomFractionService rfs = new RandomFractionService();
+    private Fraction value;
 
-private static final RandomFractionService rfs = new RandomFractionService();
+    public Field() {
+        this.value = Field.rfs.nextFraction();
+    }
 
+    @Override
+    public String toString() {
+        return this.value.compareTo(Fraction.ZERO) == 0 ? "" : this.value.toString();
+    }
 
-@Override
-public String toString(){
-    return value.compareTo(Fraction.ZERO) == 0 ? "" : value.toString();
-}
+    public void setRandomValue() {
+        this.value = Field.rfs.nextFraction();
+    }
 
-public void setRandomValue () {
-    value = rfs.nextFraction();
-
-
-}
-
-public void setZero(){
-    value = Fraction.ZERO;
-}
-
+    public void setZero() {
+        this.value = Fraction.ZERO;
+    }
 }

@@ -2,6 +2,7 @@ package de.hhn.lib;
 
 /**
  * Two-dimensional linked list.
+ * Use the {@link #from(Object[][])} method to create a new instance.
  */
 public class DoublyLinkedList<T> {
     private DoublyLinkedListNode<T> anchor;
@@ -10,7 +11,7 @@ public class DoublyLinkedList<T> {
         this.anchor = anchor;
     }
 
-    public DoublyLinkedList(T anchorValue) {
+    protected DoublyLinkedList(T anchorValue) {
         this.anchor = new DoublyLinkedListNode<>(anchorValue, true);
         this.anchor.setNorth(null);
         this.anchor.setSouth(null);
