@@ -20,6 +20,10 @@ public class DoublyLinkedList<T> {
     }
 
     protected static <U> DoublyLinkedListNode<U> constructFromMatrix(U[][] mat, int i, int j, DoublyLinkedListNode<U> last) {
+        if (i >= mat.length || j >= mat[i].length) {
+            return null;
+        }
+
         var curr = new DoublyLinkedListNode<>(mat[i][j], j == 0 && i == 0);
 
         if (j == 0) {
@@ -50,6 +54,10 @@ public class DoublyLinkedList<T> {
         var anchor = DoublyLinkedList.constructFromMatrix(matrix, 0, 0, null);
 
         return new DoublyLinkedList<>(anchor);
+    }
+
+    public DoublyLinkedListNode<T> getAnchor() {
+        return this.anchor;
     }
 
     public DoublyLinkedListNode<T> getAt(Vector2D position) {

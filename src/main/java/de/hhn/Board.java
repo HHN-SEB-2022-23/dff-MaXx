@@ -3,8 +3,8 @@ package de.hhn;
 import de.hhn.lib.DoublyLinkedList;
 
 public class Board {
-    public final ReadOnlyCharacter characterB;
-    public final ReadOnlyCharacter characterW;
+    public final Character characterB;
+    public final Character characterW;
     public final DoublyLinkedList<Field> fields;
 
     public Board() {
