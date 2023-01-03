@@ -10,7 +10,6 @@ public class Vector2D {
     public Vector2D (int x, int y) {
         this.y = y;
         this.x = x;
-
     }
 
     public int getX () {
