@@ -2,6 +2,11 @@ package de.hhn;
 
 import de.hhn.services.RandomFractionService;
 
+/**
+ * Die Daten eines Feldes.
+ *
+ * Verwaltet nur die darin enthaltene Fraction.
+ */
 public class Field implements ReadOnlyField {
 
     private static final RandomFractionService rfs = new RandomFractionService();

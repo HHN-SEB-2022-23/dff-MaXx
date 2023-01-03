@@ -1,5 +1,8 @@
 package de.hhn.lib;
 
+/**
+ * Stellt eine zweidimensionale Richtungsangabe dar.
+ */
 public class Vector2D {
     int x;
     int y;
@@ -24,5 +27,9 @@ public class Vector2D {
 
     public void setY(int y) {
         this.y = y;
+    }
+
+    public Vector2D add(Vector2D other) {
+        return new Vector2D(this.x + other.x, this.y + other.y);
     }
 }

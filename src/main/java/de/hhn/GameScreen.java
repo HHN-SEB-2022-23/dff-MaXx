@@ -6,6 +6,11 @@ import de.hhn.lib.Vector2D;
 import java.util.Optional;
 import java.util.Scanner;
 
+/**
+ * Oberfläche für das Spiel.
+ *
+ * Ausgabe und Eingabe über die Konsole.
+ */
 public class GameScreen {
     protected final Scanner scanner;
     protected CharacterKind currentPlayer;
@@ -32,7 +37,7 @@ public class GameScreen {
         System.out.println(sb);
     }
 
-    private static void printField(ReadOnlyField field) {
+    private static void printField(Object field) {
         System.out.printf(GameScreen.fieldFormat, field);
     }
 
@@ -50,20 +55,29 @@ public class GameScreen {
         var rowStart = fields.getAnchor();
         var currentNode = rowStart;
         var y = 0;
+        var x = 0;
 
         GameScreen.printHead('N');
         System.out.print("  ");
         while (true) {
-            GameScreen.printField(currentNode.getData());
+            if (x == characterB.getPosition().getX() && y == characterB.getPosition().getY()) {
+                GameScreen.printField(characterB);
+            } else if (x == characterW.getPosition().getX() && y == characterW.getPosition().getY()) {
+                GameScreen.printField(characterW);
+            } else {
+                GameScreen.printField(currentNode.getData());
+            }
 
             var east = currentNode.getEast();
             if (east.isPresent()) {
                 currentNode = east.get();
+                x++;
             } else {
                 var south = rowStart.getSouth();
 
                 if (south.isPresent()) {
                     y++;
+                    x = 0;
                     if (y == 4) {
                         System.out.print(" E");
                         System.out.println();

@@ -1,5 +1,8 @@
 package de.hhn;
 
+/**
+ * Vermittelt zwischen Model (Board) und View (GameScreen).
+ */
 public class Controller {
     private final GameScreen view;
     private final Board model;
@@ -31,6 +34,13 @@ public class Controller {
     }
 
     private void updateModel(Move move) {
+        var character = this.currentPlayer == CharacterKind.WHITE
+            ? this.model.characterW
+            : this.model.characterB;
 
+//        var targetPosition = character.getPosition().add(move.target);
+        character.move(move.target);
+
+//        this.model.fields.getAt(targetPosition).getData().setZero();
     }
 }

@@ -2,6 +2,9 @@ package de.hhn;
 
 import de.hhn.lib.Vector2D;
 
+/**
+ * Beschreibt einen Spielzug eines Spielers.
+ */
 public class Move {
     public final CharacterKind characterKind;
     public final Vector2D target;

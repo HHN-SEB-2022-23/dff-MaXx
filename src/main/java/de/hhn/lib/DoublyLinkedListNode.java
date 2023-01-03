@@ -2,6 +2,9 @@ package de.hhn.lib;
 
 import java.util.Optional;
 
+/**
+ * Ein Feld in der DoublyLinkedList
+ */
 public class DoublyLinkedListNode<T> {
     protected T data;
     protected DoublyLinkedListNode<T> north;

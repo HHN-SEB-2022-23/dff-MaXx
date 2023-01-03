@@ -2,7 +2,12 @@ package de.hhn.lib;
 
 /**
  * Two-dimensional linked list.
+ *
  * Use the {@link #from(Object[][])} method to create a new instance.
+ *
+ * Da ein Zugriff per Index nicht notwendig ist, wird eine zweidimensionale Doubly Linked List verwendet.
+ * Dabei wird eine Referenz auf ein Feld gehalten, von diesem Feld aus kommt man auf alle umliegenden Felder,
+ * ohne wissen zu müssen an welcher Position auf dem Spielbrett sich das Feld befindet.
  */
 public class DoublyLinkedList<T> {
     private DoublyLinkedListNode<T> anchor;
@@ -19,12 +24,23 @@ public class DoublyLinkedList<T> {
         this.anchor.setWest(null);
     }
 
+    public DoublyLinkedListNode<T> getAt(Vector2D position) {
+        var curr = this.anchor;
+        for (int i = 0; i < position.getX(); i++) {
+            curr = curr.getEast().orElseThrow();
+        }
+        for (int i = 0; i < position.getY(); i++) {
+            curr = curr.getSouth().orElseThrow();
+        }
+        return curr;
+    }
+
     protected static <U> DoublyLinkedListNode<U> constructFromMatrix(U[][] mat, int i, int j, DoublyLinkedListNode<U> last) {
-        if (i >= mat.length || j >= mat[i].length) {
+        if (i >= mat.length || j >= mat[ i ].length) {
             return null;
         }
 
-        var curr = new DoublyLinkedListNode<>(mat[i][j], j == 0 && i == 0);
+        var curr = new DoublyLinkedListNode<>(mat[ i ][ j ], j == 0 && i == 0);
 
         if (j == 0) {
             curr.setWest(null);
@@ -58,13 +74,5 @@ public class DoublyLinkedList<T> {
 
     public DoublyLinkedListNode<T> getAnchor() {
         return this.anchor;
-    }
-
-    public DoublyLinkedListNode<T> getAt(Vector2D position) {
-        throw new UnsupportedOperationException("Not implemented yet.");
-    }
-
-    public void insertAt(Vector2D position, T value) {
-        throw new UnsupportedOperationException("Not implemented yet.");
     }
 }

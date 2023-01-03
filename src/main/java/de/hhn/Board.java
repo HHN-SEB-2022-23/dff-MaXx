@@ -1,7 +1,12 @@
 package de.hhn;
 
 import de.hhn.lib.DoublyLinkedList;
+import de.hhn.lib.Vector2D;
 
+/**
+ * Das Spielbrett.
+ * Initialisiert und hält alle Daten die für das Spiel benötigt werden.
+ */
 public class Board {
     public final Character characterB;
     public final Character characterW;
@@ -16,7 +21,17 @@ public class Board {
         }
 
         this.fields = DoublyLinkedList.from(fieldsMatrix);
-        this.characterB = new Character();
-        this.characterW = new Character();
+
+        this.characterB = new Character(
+            CharacterKind.BLACK,
+            this.fields.getAt(new Vector2D(4, 5)),
+            new Vector2D(4, 5)
+        );
+
+        this.characterW = new Character(
+            CharacterKind.WHITE,
+            this.fields.getAt(new Vector2D(3, 2)),
+            new Vector2D(3, 2)
+        );
     }
 }

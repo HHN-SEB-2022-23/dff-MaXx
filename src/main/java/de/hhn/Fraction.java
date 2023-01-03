@@ -4,6 +4,9 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
 
+/**
+ * Mathematischer Bruch.
+ */
 public class Fraction extends Number implements Comparable<Fraction> {
     private final BigInteger numerator;
     private final BigInteger denominator;
