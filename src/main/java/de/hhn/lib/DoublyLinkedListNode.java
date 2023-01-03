@@ -26,31 +26,31 @@ public class DoublyLinkedListNode<T> {
         return Optional.ofNullable(this.north);
     }
 
-    public void setNorth(DoublyLinkedListNode<T> north) {
-        this.north = north;
+    public Optional<DoublyLinkedListNode<T>> setNorth(DoublyLinkedListNode<T> north) {
+        return Optional.ofNullable(this.north = north);
     }
 
     public Optional<DoublyLinkedListNode<T>> getSouth() {
         return Optional.ofNullable(this.south);
     }
 
-    public void setSouth(DoublyLinkedListNode<T> south) {
-        this.south = south;
+    public Optional<DoublyLinkedListNode<T>> setSouth(DoublyLinkedListNode<T> south) {
+        return Optional.ofNullable(this.south = south);
     }
 
     public Optional<DoublyLinkedListNode<T>> getEast() {
         return Optional.ofNullable(this.east);
     }
 
-    public void setEast(DoublyLinkedListNode<T> east) {
-        this.east = east;
+    public Optional<DoublyLinkedListNode<T>> setEast(DoublyLinkedListNode<T> east) {
+        return Optional.ofNullable(this.east = east);
     }
 
     public Optional<DoublyLinkedListNode<T>> getWest() {
         return Optional.ofNullable(this.west);
     }
 
-    public void setWest(DoublyLinkedListNode<T> west) {
-        this.west = west;
+    public Optional<DoublyLinkedListNode<T>> setWest(DoublyLinkedListNode<T> west) {
+        return Optional.ofNullable(this.west = west);
     }
 }

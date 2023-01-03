@@ -38,26 +38,32 @@ public class DoublyLinkedList<T> {
     }
 
     protected static <U> DoublyLinkedListNode<U> constructFromMatrix(U arr[][], int i, int j, int m, int n, DoublyLinkedListNode<U>[][] visited) {
-        // return if i or j is out of bounds
+        // abbruch, wenn i oder j außerhalb des Arrays liegt
         if (( i > ( m - 1 ) ) || ( j > ( n - 1 ) ) || ( i < 0 ) || ( j < 0 )) {
             return null;
         }
 
-        // Check if node is previously created then,
-        // don't need to create new
+        // Prüfe ob Node bereits erstellt wurde, wenn ja, dann gebe diese zurück
         if (visited[i][j] != null) {
             return visited[i][j];
         }
 
-        // create a new node for current i and j
-        // and recursively allocate its down and
-        // right pointers
-        var temp = new DoublyLinkedListNode(arr[i][j], i == 0 && j == 0);
+        // Erstelle neue Node für i und j rekursiv umliegende Referenzen setzen
+        var temp = new DoublyLinkedListNode<U>(arr[i][j], i == 0 && j == 0);
         visited[i][j] = temp;
-        temp.setEast(DoublyLinkedList.constructFromMatrix(arr, i, j + 1, m, n, visited));
-        temp.setSouth(DoublyLinkedList.constructFromMatrix(arr, i + 1, j, m, n, visited));
-        temp.setWest(DoublyLinkedList.constructFromMatrix(arr, i, j - 1, m, n, visited));
-        temp.setNorth(DoublyLinkedList.constructFromMatrix(arr, i - 1, j, m, n, visited));
+
+        temp.setEast(DoublyLinkedList.constructFromMatrix(arr, i, j + 1, m, n, visited))
+                .ifPresent(east -> east.setWest(temp));
+
+        temp.setSouth(DoublyLinkedList.constructFromMatrix(arr, i + 1, j, m, n, visited))
+                .ifPresent(south -> south.setNorth(temp));
+
+        temp.setWest(DoublyLinkedList.constructFromMatrix(arr, i, j - 1, m, n, visited))
+                .ifPresent(west -> west.setEast(temp));
+
+        temp.setNorth(DoublyLinkedList.constructFromMatrix(arr, i - 1, j, m, n, visited))
+                .ifPresent(north -> north.setSouth(temp));
+
         return temp;
     }
 

@@ -3,7 +3,7 @@ package de.hhn;
 import de.hhn.services.RandomFractionService;
 
 /**
- * Die Daten eines Feldes.
+ * Die Daten eines Feldes auf dem Spielbrett.
  *
  * Verwaltet nur die darin enthaltene Fraction.
  */
