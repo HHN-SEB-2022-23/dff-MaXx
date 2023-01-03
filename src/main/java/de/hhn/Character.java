@@ -8,15 +8,17 @@ import de.hhn.lib.Vector2D;
  */
 public class Character implements ReadOnlyCharacter {
     private Fraction points;
-    private CharacterKind kind;
+    private final CharacterKind kind;
     private Vector2D position;
-    public DoublyLinkedListNode<Field> field;
+    public DoublyLinkedListNode<Field> fieldNode;
 
-    public Character(CharacterKind kind, DoublyLinkedListNode<Field> field, Vector2D position) {
+    public Character(CharacterKind kind, DoublyLinkedListNode<Field> fieldNode, Vector2D position) {
         this.points = Fraction.ZERO;
         this.kind = kind;
         this.position = position;
-        this.field = field;
+        this.fieldNode = fieldNode;
+
+        this.fieldNode.getData().setZero();
     }
 
     public void incrementPoints(Fraction points) {
@@ -41,18 +43,25 @@ public class Character implements ReadOnlyCharacter {
     public void move(Vector2D direction) {
         this.position = this.position.add(direction);
 
-        if (direction.getX() > 0) {
-            this.field = this.field.getEast().get();
+        if (direction.x() > 0) {
+            this.fieldNode.getEast()
+                .ifPresent(eastNode -> this.fieldNode = eastNode);
         }
-        else {
-            this.field = this.field.getWest().get();
+        else if (direction.x() < 0) {
+            this.fieldNode.getWest()
+                .ifPresent(westNode -> this.fieldNode = westNode);
         }
 
-        if (direction.getY() > 0) {
-            this.field = this.field.getSouth().get();
+        if (direction.y() > 0) {
+            this.fieldNode.getSouth()
+                .ifPresent(southNode -> this.fieldNode = southNode);
         }
-        else {
-            this.field = this.field.getNorth().get();
+        else if (direction.y() < 0) {
+            this.fieldNode.getNorth()
+                .ifPresent(northNode -> this.fieldNode = northNode);
         }
+
+        this.incrementPoints(this.fieldNode.getData().getValue());
+        this.fieldNode.getData().setZero();
     }
 }

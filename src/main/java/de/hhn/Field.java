@@ -18,11 +18,19 @@ public class Field implements ReadOnlyField {
 
     @Override
     public String toString() {
-        return this.value.compareTo(Fraction.ZERO) == 0 ? "" : this.value.toString();
+        if (this.value.compareTo(Fraction.ZERO) == 0) {
+            return "";
+        }
+
+        return this.value.toString();
     }
 
     public void setRandomValue() {
         this.value = Field.rfs.nextFraction();
+    }
+
+    public Fraction getValue() {
+        return this.value;
     }
 
     public void setZero() {

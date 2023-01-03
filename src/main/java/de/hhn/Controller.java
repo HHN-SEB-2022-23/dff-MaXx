@@ -31,6 +31,8 @@ public class Controller {
 
             this.updateModel(move.get());
         }
+
+        System.out.println("Spiel beendet");
     }
 
     private void updateModel(Move move) {
@@ -38,9 +40,6 @@ public class Controller {
             ? this.model.characterW
             : this.model.characterB;
 
-//        var targetPosition = character.getPosition().add(move.target);
         character.move(move.target);
-
-//        this.model.fields.getAt(targetPosition).getData().setZero();
     }
 }

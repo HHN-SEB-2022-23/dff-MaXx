@@ -68,6 +68,10 @@ public class Fraction extends Number implements Comparable<Fraction> {
     }
 
     Fraction add(Fraction r) {
+        if (this.numerator.equals(BigInteger.ZERO)) {
+            return r;
+        }
+
         return new Fraction(this.numerator.multiply(r.denominator).add(r.numerator.multiply(this.denominator)), this.denominator.multiply(r.denominator));
     }
 

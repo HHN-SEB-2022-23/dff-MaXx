@@ -1,5 +1,7 @@
 package de.hhn.lib;
 
+import org.w3c.dom.Node;
+
 /**
  * Two-dimensional linked list.
  *
@@ -26,40 +28,37 @@ public class DoublyLinkedList<T> {
 
     public DoublyLinkedListNode<T> getAt(Vector2D position) {
         var curr = this.anchor;
-        for (int i = 0; i < position.getX(); i++) {
+        for (int i = 0; i < position.x(); i++) {
             curr = curr.getEast().orElseThrow();
         }
-        for (int i = 0; i < position.getY(); i++) {
+        for (int i = 0; i < position.y(); i++) {
             curr = curr.getSouth().orElseThrow();
         }
         return curr;
     }
 
-    protected static <U> DoublyLinkedListNode<U> constructFromMatrix(U[][] mat, int i, int j, DoublyLinkedListNode<U> last) {
-        if (i >= mat.length || j >= mat[ i ].length) {
+    protected static <U> DoublyLinkedListNode<U> constructFromMatrix(U arr[][], int i, int j, int m, int n, DoublyLinkedListNode<U>[][] visited) {
+        // return if i or j is out of bounds
+        if (( i > ( m - 1 ) ) || ( j > ( n - 1 ) ) || ( i < 0 ) || ( j < 0 )) {
             return null;
         }
 
-        var curr = new DoublyLinkedListNode<>(mat[ i ][ j ], j == 0 && i == 0);
-
-        if (j == 0) {
-            curr.setWest(null);
-        }
-        else {
-            curr.setWest(last);
+        // Check if node is previously created then,
+        // don't need to create new
+        if (visited[i][j] != null) {
+            return visited[i][j];
         }
 
-        if (i == 0) {
-            curr.setNorth(null);
-        }
-        else {
-            curr.setNorth(last);
-        }
-
-        curr.setEast(DoublyLinkedList.constructFromMatrix(mat, i, j + 1, curr));
-        curr.setSouth(DoublyLinkedList.constructFromMatrix(mat, i + 1, j, curr));
-
-        return curr;
+        // create a new node for current i and j
+        // and recursively allocate its down and
+        // right pointers
+        var temp = new DoublyLinkedListNode(arr[i][j], i == 0 && j == 0);
+        visited[i][j] = temp;
+        temp.setEast(DoublyLinkedList.constructFromMatrix(arr, i, j + 1, m, n, visited));
+        temp.setSouth(DoublyLinkedList.constructFromMatrix(arr, i + 1, j, m, n, visited));
+        temp.setWest(DoublyLinkedList.constructFromMatrix(arr, i, j - 1, m, n, visited));
+        temp.setNorth(DoublyLinkedList.constructFromMatrix(arr, i - 1, j, m, n, visited));
+        return temp;
     }
 
     public static <T> DoublyLinkedList<T> from(T[][] matrix) {
@@ -67,7 +66,12 @@ public class DoublyLinkedList<T> {
             throw new IllegalArgumentException("Matrix must not be empty.");
         }
 
-        var anchor = DoublyLinkedList.constructFromMatrix(matrix, 0, 0, null);
+        int m = matrix.length;
+        int n = matrix[0].length;
+
+        DoublyLinkedListNode<T>[][] visited = new DoublyLinkedListNode[m][n];
+
+        var anchor = DoublyLinkedList.constructFromMatrix(matrix, 0, 0, m, n, visited);
 
         return new DoublyLinkedList<>(anchor);
     }

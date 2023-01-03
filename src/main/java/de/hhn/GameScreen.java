@@ -60,9 +60,9 @@ public class GameScreen {
         GameScreen.printHead('N');
         System.out.print("  ");
         while (true) {
-            if (x == characterB.getPosition().getX() && y == characterB.getPosition().getY()) {
+            if (x == characterB.getPosition().x() && y == characterB.getPosition().y()) {
                 GameScreen.printField(characterB);
-            } else if (x == characterW.getPosition().getX() && y == characterW.getPosition().getY()) {
+            } else if (x == characterW.getPosition().x() && y == characterW.getPosition().y()) {
                 GameScreen.printField(characterW);
             } else {
                 GameScreen.printField(currentNode.getData());
@@ -99,40 +99,39 @@ public class GameScreen {
         System.out.println();
         GameScreen.printHead('S');
         System.out.println();
-        System.out.println("Next moving character: " + nextMovingCharacter);
+        System.out.printf("Player B has %s points%n", characterB.getPoints());
+        System.out.printf("Player W has %s points%n", characterW.getPoints());
     }
 
     public Optional<Move> getNextMove() {
         while(true) {
-            System.out.print("Richtung: ");
+            System.out.printf("%s Richtung: ", this.currentPlayer);
             String command = this.scanner.nextLine().toLowerCase();
 
             switch (command) {
-                case "n" -> {
+                case "n":
                     return Optional.of(new Move(this.currentPlayer, new Vector2D(0, -1)));
-                }
-                case "s" -> {
+                case "s":
                     return Optional.of(new Move(this.currentPlayer, new Vector2D(0, 1)));
-                }
-                case "w" -> {
+                case "w":
                     return Optional.of(new Move(this.currentPlayer, new Vector2D(-1, 0)));
-                }
-                case "e" -> {
+                case "e":
                     return Optional.of(new Move(this.currentPlayer, new Vector2D(1, 0)));
-                }
-                case "q", "quit", "exit", "stop" -> {
+                case "q":
+                case "quit":
+                case "exit":
+                case "stop":
                     return Optional.empty();
-                }
-                case "no" -> {
+                case "no":
                     if (this.currentPlayer == CharacterKind.WHITE) {
                         return Optional.of(new Move(this.currentPlayer, new Vector2D(1, -1)));
                     }
-                }
-                case "sw" -> {
+                    break;
+                case "sw":
                     if (this.currentPlayer == CharacterKind.BLACK) {
                         return Optional.of(new Move(this.currentPlayer, new Vector2D(-1, 1)));
                     }
-                }
+                    break;
             }
 
             System.out.println("Ungültige Eingabe!");
