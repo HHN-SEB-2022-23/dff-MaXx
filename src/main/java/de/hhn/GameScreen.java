@@ -138,6 +138,11 @@ public class GameScreen {
         }
     }
 
+    public void drawWinner(ReadOnlyCharacter winner) {
+        GameScreen.clearScreen();
+        System.out.printf("Player %s has won!%n", winner);
+    }
+
     protected static void clearScreen() {
         System.out.print("\033[H\033[2J");
         System.out.flush();
