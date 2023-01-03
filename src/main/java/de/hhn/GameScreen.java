@@ -1,6 +1,7 @@
 package de.hhn;
 
 import de.hhn.lib.DoublyLinkedList;
+import de.hhn.lib.Vector2D;
 
 import java.util.Optional;
 import java.util.Scanner;
@@ -93,20 +94,29 @@ public class GameScreen {
             String command = this.scanner.nextLine().toLowerCase();
 
             switch (command) {
-                case "n", "s", "e", "w" -> {
-                    return Optional.of(new Move());
+                case "n" -> {
+                    return Optional.of(new Move(this.currentPlayer, new Vector2D(0, -1)));
+                }
+                case "s" -> {
+                    return Optional.of(new Move(this.currentPlayer, new Vector2D(0, 1)));
+                }
+                case "w" -> {
+                    return Optional.of(new Move(this.currentPlayer, new Vector2D(-1, 0)));
+                }
+                case "e" -> {
+                    return Optional.of(new Move(this.currentPlayer, new Vector2D(1, 0)));
                 }
                 case "q", "quit", "exit", "stop" -> {
                     return Optional.empty();
                 }
                 case "no" -> {
                     if (this.currentPlayer == CharacterKind.WHITE) {
-                        return Optional.of(new Move());
+                        return Optional.of(new Move(this.currentPlayer, new Vector2D(1, -1)));
                     }
                 }
                 case "sw" -> {
                     if (this.currentPlayer == CharacterKind.BLACK) {
-                        return Optional.of(new Move());
+                        return Optional.of(new Move(this.currentPlayer, new Vector2D(-1, 1)));
                     }
                 }
             }
