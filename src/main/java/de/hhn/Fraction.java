@@ -105,7 +105,7 @@ public class Fraction extends Number implements Comparable<Fraction> {
      */
     @Override
     public int intValue() {
-        return this.numerator.divide(this.denominator).intValue();
+        return this.toBigDecimal().intValue();
     }
 
     /**
@@ -116,7 +116,7 @@ public class Fraction extends Number implements Comparable<Fraction> {
      */
     @Override
     public long longValue() {
-        return this.numerator.divide(this.denominator).longValue();
+        return this.toBigDecimal().longValue();
     }
 
     /**
@@ -127,7 +127,7 @@ public class Fraction extends Number implements Comparable<Fraction> {
      */
     @Override
     public float floatValue() {
-        return this.numerator.divide(this.denominator).floatValue();
+        return this.toBigDecimal().floatValue();
     }
 
     /**
@@ -138,7 +138,11 @@ public class Fraction extends Number implements Comparable<Fraction> {
      */
     @Override
     public double doubleValue() {
-        return this.numerator.divide(this.denominator).doubleValue();
+        return this.toBigDecimal().doubleValue();
+    }
+
+    private BigDecimal toBigDecimal() {
+        return new BigDecimal(this.numerator).divide(new BigDecimal(this.denominator), RoundingMode.HALF_UP);
     }
 
     /**
@@ -175,8 +179,8 @@ public class Fraction extends Number implements Comparable<Fraction> {
      */
     @Override
     public int compareTo(Fraction o) {
-        BigDecimal a = new BigDecimal(this.numerator).divide(new BigDecimal(this.denominator), RoundingMode.HALF_UP);
-        BigDecimal b = new BigDecimal(o.numerator).divide(new BigDecimal(o.denominator), RoundingMode.HALF_UP);
+        BigDecimal a = this.toBigDecimal();
+        BigDecimal b = o.toBigDecimal();
 
         return a.compareTo(b);
     }
