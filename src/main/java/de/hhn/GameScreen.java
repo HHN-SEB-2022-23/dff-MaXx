@@ -99,8 +99,8 @@ public class GameScreen {
         System.out.println();
         GameScreen.printHead('S');
         System.out.println();
-        System.out.printf("Player B has %s points%n", characterB.getPoints());
-        System.out.printf("Player W has %s points%n", characterW.getPoints());
+        System.out.printf("Player B has %s points (~ %s)%n", characterB.getPoints(), characterB.getPoints().floatValue());
+        System.out.printf("Player W has %s points (~ %s)%n", characterW.getPoints(), characterW.getPoints().floatValue());
     }
 
     public Optional<Move> getNextMove() {
@@ -140,7 +140,7 @@ public class GameScreen {
 
     public void drawWinner(ReadOnlyCharacter winner) {
         GameScreen.clearScreen();
-        System.out.printf("Player %s has won!%n", winner);
+        System.out.printf("Player %s has won with ~%s points!%n", winner, winner.getPoints().floatValue());
     }
 
     protected static void clearScreen() {
