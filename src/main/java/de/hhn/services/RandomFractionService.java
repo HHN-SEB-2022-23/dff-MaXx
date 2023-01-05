@@ -16,7 +16,7 @@ public class RandomFractionService {
     public Fraction nextFraction() {
         // Zufälligen Index für den Nenner und Zähler auswählen
         var index1 = RandomFractionService.getRandomInt(RandomFractionService.rangePlusOne, this.primes.length - 1);
-        var index2 = RandomFractionService.getRandomInt(0, RandomFractionService.range);
+        var index2 = index1 - RandomFractionService.getRandomInt(1, RandomFractionService.range);
 
         return new Fraction(
             this.primes[index1],
@@ -24,7 +24,13 @@ public class RandomFractionService {
         );
     }
 
+    /**
+     * Gibt eine zufällige Ganzzahl von min bis max zurück.
+     * @param min Die kleinste mögliche Zahl.
+     * @param max Die größte mögliche Zahl.
+     * @return Eine zufällige Ganzzahl von min bis max.
+     */
     private static int getRandomInt(int min, int max) {
-        return (int) Math.floor(Math.random() * (max - min + 1)) + min;
+        return (int) (Math.random() * (max - min) + min);
     }
 }
