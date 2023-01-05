@@ -55,11 +55,18 @@ public class GameScreen {
         var y = 0;
         var x = 0;
         while (true) {
+            // Character B here?
             if (x == characterB.getPosition().x() && y == characterB.getPosition().y()) {
                 GameScreen.printField(characterB, sb);
-            } else if (x == characterW.getPosition().x() && y == characterW.getPosition().y()) {
+            }
+
+            // Character W here?
+            else if (x == characterW.getPosition().x() && y == characterW.getPosition().y()) {
                 GameScreen.printField(characterW, sb);
-            } else {
+            }
+
+            // Field
+            else {
                 GameScreen.printField(currentNode.getData(), sb);
             }
 
@@ -89,12 +96,10 @@ public class GameScreen {
         }
 
         GameScreen.printHead('S', sb);
-        sb.append('\n');
         GameScreen.printPlayerPoints(this.characterB, sb);
         GameScreen.printPlayerPoints(this.characterW, sb);
         GameScreen.clearScreen();
-        System.out.print(sb);
-        System.out.println(sb.length());
+        System.out.println(sb);
     }
 
     private static void printPlayerPoints(ReadOnlyCharacter character, StringBuilder sb) {
