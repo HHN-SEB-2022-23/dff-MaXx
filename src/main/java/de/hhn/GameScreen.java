@@ -24,21 +24,12 @@ public class GameScreen {
     }
 
     private static void printHead(char c) {
-        var sb = new StringBuilder(2 + ( GameScreen.fieldSize << 2 ));
-        sb.append(' ');
-
-        var emptyField = " ".repeat(GameScreen.fieldSize);
-        for (int i = 0; i < 4; i++) {
-            sb.append(emptyField);
-        }
-
-        sb.append(c);
-
-        System.out.println(sb);
+        System.out.println("  ".repeat(GameScreen.fieldSize << 1) + c);
     }
 
     private static void printField(Object field) {
-        System.out.printf(GameScreen.fieldFormat, field);
+        var fieldStr = field.toString();
+        System.out.printf(GameScreen.fieldFormat, " ".repeat((GameScreen.fieldSize >> 1) - (fieldStr.length() >> 1) - 1) + fieldStr);
     }
 
     public void draw(
@@ -99,8 +90,16 @@ public class GameScreen {
         System.out.println();
         GameScreen.printHead('S');
         System.out.println();
-        System.out.printf("Player B has %s points (~ %s)%n", characterB.getPoints(), characterB.getPoints().floatValue());
-        System.out.printf("Player W has %s points (~ %s)%n", characterW.getPoints(), characterW.getPoints().floatValue());
+        this.printPlayerPoints(this.characterB);
+        this.printPlayerPoints(this.characterW);
+    }
+
+    private void printPlayerPoints(ReadOnlyCharacter character) {
+        System.out.printf(
+            "Player W has %s points (~ %s)%n",
+            character.getPoints(),
+            character.getPoints().floatValue()
+        );
     }
 
     public Optional<Move> getNextMove() {
@@ -109,29 +108,43 @@ public class GameScreen {
             String command = this.scanner.nextLine().toLowerCase();
 
             switch (command) {
-                case "n":
-                    return Optional.of(new Move(this.currentPlayer, new Vector2D(0, -1)));
-                case "s":
-                    return Optional.of(new Move(this.currentPlayer, new Vector2D(0, 1)));
-                case "w":
-                    return Optional.of(new Move(this.currentPlayer, new Vector2D(-1, 0)));
-                case "e":
-                    return Optional.of(new Move(this.currentPlayer, new Vector2D(1, 0)));
-                case "q":
-                case "quit":
-                case "exit":
-                case "stop":
+                case "n" -> {
+                    return Optional.of(
+                        new Move(this.currentPlayer, new Vector2D(0, -1))
+                    );
+                }
+                case "s" -> {
+                    return Optional.of(
+                        new Move(this.currentPlayer, new Vector2D(0, 1))
+                    );
+                }
+                case "w" -> {
+                    return Optional.of(
+                        new Move(this.currentPlayer, new Vector2D(-1, 0))
+                    );
+                }
+                case "e" -> {
+                    return Optional.of(
+                        new Move(this.currentPlayer, new Vector2D(1, 0))
+                    );
+                }
+                case "q", "quit", "exit", "stop" -> {
                     return Optional.empty();
-                case "no":
+                }
+                case "no" -> {
                     if (this.currentPlayer == CharacterKind.WHITE) {
-                        return Optional.of(new Move(this.currentPlayer, new Vector2D(1, -1)));
+                        return Optional.of(
+                            new Move(this.currentPlayer, new Vector2D(1, -1))
+                        );
                     }
-                    break;
-                case "sw":
+                }
+                case "sw" -> {
                     if (this.currentPlayer == CharacterKind.BLACK) {
-                        return Optional.of(new Move(this.currentPlayer, new Vector2D(-1, 1)));
+                        return Optional.of(
+                            new Move(this.currentPlayer, new Vector2D(-1, 1))
+                        );
                     }
-                    break;
+                }
             }
 
             System.out.println("Ungültige Eingabe!");
