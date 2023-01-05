@@ -8,7 +8,7 @@ import java.util.Scanner;
 
 /**
  * Oberfläche für das Spiel.
- *
+ * <p>
  * Ausgabe und Eingabe über die Konsole.
  */
 public class GameScreen {
@@ -23,13 +23,17 @@ public class GameScreen {
         this.scanner = new Scanner(System.in);
     }
 
-    private static void printHead(char c) {
-        System.out.println("  ".repeat(GameScreen.fieldSize << 1) + c);
+    private static void printHead(char c, StringBuilder sb) {
+        sb.append(" ┿");
+        sb.append("━━".repeat(GameScreen.fieldSize << 1));
+        sb.append(c);
+        sb.append("━━".repeat(GameScreen.fieldSize << 1));
+        sb.append("┿\n");
     }
 
-    private static void printField(Object field) {
+    private static void printField(Object field, StringBuilder sb) {
         var fieldStr = field.toString();
-        System.out.printf(GameScreen.fieldFormat, " ".repeat((GameScreen.fieldSize >> 1) - (fieldStr.length() >> 1) - 1) + fieldStr);
+        sb.append(String.format(GameScreen.fieldFormat, " ".repeat((GameScreen.fieldSize >> 1) - (fieldStr.length() >> 1) - 1) + fieldStr));
     }
 
     public void draw(
@@ -38,25 +42,25 @@ public class GameScreen {
         ReadOnlyCharacter characterW,
         CharacterKind nextMovingCharacter
     ) {
-        GameScreen.clearScreen();
         this.currentPlayer = nextMovingCharacter;
         this.characterB = characterB;
         this.characterW = characterW;
 
         var rowStart = fields.getAnchor();
         var currentNode = rowStart;
+
+        var sb = new StringBuilder();
+        GameScreen.printHead('N', sb);
+        sb.append(" │ ");
         var y = 0;
         var x = 0;
-
-        GameScreen.printHead('N');
-        System.out.print("  ");
         while (true) {
             if (x == characterB.getPosition().x() && y == characterB.getPosition().y()) {
-                GameScreen.printField(characterB);
+                GameScreen.printField(characterB, sb);
             } else if (x == characterW.getPosition().x() && y == characterW.getPosition().y()) {
-                GameScreen.printField(characterW);
+                GameScreen.printField(characterW, sb);
             } else {
-                GameScreen.printField(currentNode.getData());
+                GameScreen.printField(currentNode.getData(), sb);
             }
 
             var east = currentNode.getEast();
@@ -70,36 +74,35 @@ public class GameScreen {
                     y++;
                     x = 0;
                     if (y == 4) {
-                        System.out.print(" E");
-                        System.out.println();
-                        System.out.print("W ");
+                        sb.append("│E\nW│ ");
                     }
                     else {
-                        System.out.print("  ");
-                        System.out.println();
-                        System.out.print("  ");
+                        sb.append("│ \n │ ");
                     }
 
                     currentNode = rowStart = south.get();
                 } else {
+                    sb.append("│\n");
                     break;
                 }
             }
         }
 
-        System.out.println();
-        GameScreen.printHead('S');
-        System.out.println();
-        this.printPlayerPoints(this.characterB);
-        this.printPlayerPoints(this.characterW);
+        GameScreen.printHead('S', sb);
+        sb.append('\n');
+        GameScreen.printPlayerPoints(this.characterB, sb);
+        GameScreen.printPlayerPoints(this.characterW, sb);
+        GameScreen.clearScreen();
+        System.out.print(sb);
+        System.out.println(sb.length());
     }
 
-    private void printPlayerPoints(ReadOnlyCharacter character) {
-        System.out.printf(
-            "Player W has %s points (~ %s)%n",
+    private static void printPlayerPoints(ReadOnlyCharacter character, StringBuilder sb) {
+        sb.append(String.format(
+            "Player W has %s points (~ %d)%n",
             character.getPoints(),
-            character.getPoints().floatValue()
-        );
+            character.getPoints().intValue()
+        ));
     }
 
     public Optional<Move> getNextMove() {
@@ -151,7 +154,7 @@ public class GameScreen {
         }
     }
 
-    public void drawWinner(ReadOnlyCharacter winner) {
+    public static void drawWinner(ReadOnlyCharacter winner) {
         GameScreen.clearScreen();
         System.out.printf("Player %s has won with ~%s points!%n", winner, winner.getPoints().floatValue());
     }

@@ -32,12 +32,12 @@ public class Controller {
             this.updateModel(move.get());
 
             if (this.model.characterB.getPoints().compareTo(Fraction.FIFTY_THREE) > 0) {
-                this.view.drawWinner(this.model.characterB);
+                GameScreen.drawWinner(this.model.characterB);
                 break gameloop;
             }
 
             if (this.model.characterW.getPoints().compareTo(Fraction.FIFTY_THREE) > 0) {
-                this.view.drawWinner(this.model.characterW);
+                GameScreen.drawWinner(this.model.characterW);
                 break gameloop;
             }
         }
