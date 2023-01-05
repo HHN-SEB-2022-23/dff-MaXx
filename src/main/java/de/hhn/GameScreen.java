@@ -12,12 +12,12 @@ import java.util.Scanner;
  * Ausgabe und Eingabe über die Konsole.
  */
 public class GameScreen {
+    protected static final int fieldSize = 8;
+    protected static final String fieldFormat = "%-" + GameScreen.fieldSize + 's';
     protected final Scanner scanner;
     protected CharacterKind currentPlayer;
     protected ReadOnlyCharacter characterB;
     protected ReadOnlyCharacter characterW;
-    protected static final int fieldSize = 8;
-    protected static final String fieldFormat = "%-" + GameScreen.fieldSize + 's';
 
     public GameScreen() {
         this.scanner = new Scanner(System.in);
@@ -25,15 +25,37 @@ public class GameScreen {
 
     private static void printHead(char c, StringBuilder sb) {
         sb.append(" ┿");
-        sb.append("━━".repeat(GameScreen.fieldSize << 1));
+        var space = "━━".repeat(GameScreen.fieldSize << 1);
+        sb.append(space);
         sb.append(c);
-        sb.append("━━".repeat(GameScreen.fieldSize << 1));
+        sb.append(space);
         sb.append("┿\n");
     }
 
     private static void printField(Object field, StringBuilder sb) {
         var fieldStr = field.toString();
-        sb.append(String.format(GameScreen.fieldFormat, " ".repeat((GameScreen.fieldSize >> 1) - (fieldStr.length() >> 1) - 1) + fieldStr));
+        sb.append(String.format(
+            GameScreen.fieldFormat,
+            " ".repeat(( GameScreen.fieldSize >> 1 ) - ( fieldStr.length() >> 1 ) - 1) + fieldStr
+        ));
+    }
+
+    private static void printPlayerPoints(ReadOnlyCharacter character, StringBuilder sb) {
+        sb.append(String.format(
+            "Player W has %s points (~ %d)%n",
+            character.getPoints(),
+            character.getPoints().intValue()
+        ));
+    }
+
+    public static void drawWinner(ReadOnlyCharacter winner) {
+        GameScreen.clearScreen();
+        System.out.printf("Player %s has won with ~%s points!%n", winner, winner.getPoints().floatValue());
+    }
+
+    protected static void clearScreen() {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
     }
 
     public void draw(
@@ -74,7 +96,8 @@ public class GameScreen {
             if (east.isPresent()) {
                 currentNode = east.get();
                 x++;
-            } else {
+            }
+            else {
                 var south = rowStart.getSouth();
 
                 if (south.isPresent()) {
@@ -88,7 +111,8 @@ public class GameScreen {
                     }
 
                     currentNode = rowStart = south.get();
-                } else {
+                }
+                else {
                     sb.append("│\n");
                     break;
                 }
@@ -102,16 +126,8 @@ public class GameScreen {
         System.out.println(sb);
     }
 
-    private static void printPlayerPoints(ReadOnlyCharacter character, StringBuilder sb) {
-        sb.append(String.format(
-            "Player W has %s points (~ %d)%n",
-            character.getPoints(),
-            character.getPoints().intValue()
-        ));
-    }
-
     public Optional<Move> getNextMove() {
-        while(true) {
+        while (true) {
             System.out.printf("%s Richtung: ", this.currentPlayer);
             String command = this.scanner.nextLine().toLowerCase();
 
@@ -157,15 +173,5 @@ public class GameScreen {
 
             System.out.println("Ungültige Eingabe!");
         }
-    }
-
-    public static void drawWinner(ReadOnlyCharacter winner) {
-        GameScreen.clearScreen();
-        System.out.printf("Player %s has won with ~%s points!%n", winner, winner.getPoints().floatValue());
-    }
-
-    protected static void clearScreen() {
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
     }
 }

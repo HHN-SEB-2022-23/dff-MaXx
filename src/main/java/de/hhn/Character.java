@@ -7,10 +7,10 @@ import de.hhn.lib.Vector2D;
  * Hält Daten, die den einzelnen Spieler betreffen.
  */
 public class Character implements ReadOnlyCharacter {
-    private Fraction points;
     private final CharacterKind kind;
-    private Vector2D position;
     public DoublyLinkedListNode<Field> fieldNode;
+    private Fraction points;
+    private Vector2D position;
 
     public Character(CharacterKind kind, DoublyLinkedListNode<Field> fieldNode, Vector2D position) {
         this.points = Fraction.ZERO;

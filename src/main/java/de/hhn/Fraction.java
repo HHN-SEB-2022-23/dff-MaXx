@@ -8,11 +8,10 @@ import java.math.RoundingMode;
  * Mathematischer Bruch.
  */
 public class Fraction extends Number implements Comparable<Fraction> {
+    public static final Fraction ZERO = new Fraction(0, 1);
+    public static final Fraction FIFTY_THREE = new Fraction(53, 1);
     private final BigInteger numerator;
     private final BigInteger denominator;
-
-    public static final Fraction ZERO = new Fraction(0,1);
-    public static final Fraction FIFTY_THREE = new Fraction(53,1);
 
     public Fraction(Number numerator, Number denominator) {
         this(BigInteger.valueOf(numerator.longValue()), BigInteger.valueOf(denominator.longValue()));
@@ -73,11 +72,17 @@ public class Fraction extends Number implements Comparable<Fraction> {
             return r;
         }
 
-        return new Fraction(this.numerator.multiply(r.denominator).add(r.numerator.multiply(this.denominator)), this.denominator.multiply(r.denominator));
+        return new Fraction(
+            this.numerator.multiply(r.denominator).add(r.numerator.multiply(this.denominator)),
+            this.denominator.multiply(r.denominator)
+        );
     }
 
     Fraction subtract(Fraction r) {
-        return new Fraction(this.numerator.multiply(r.denominator).subtract(r.numerator.multiply(this.denominator)), this.denominator.multiply(r.denominator));
+        return new Fraction(
+            this.numerator.multiply(r.denominator).subtract(r.numerator.multiply(this.denominator)),
+            this.denominator.multiply(r.denominator)
+        );
     }
 
     Fraction multiply(Fraction r) {

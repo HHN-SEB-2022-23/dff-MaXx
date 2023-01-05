@@ -13,10 +13,10 @@ public class Board {
     public final DoublyLinkedList<Field> fields;
 
     public Board() {
-        Field[][] fieldsMatrix = new Field[8][8];
+        Field[][] fieldsMatrix = new Field[ 8 ][ 8 ];
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                fieldsMatrix[i][j] = new Field();
+                fieldsMatrix[ i ][ j ] = new Field();
             }
         }
 

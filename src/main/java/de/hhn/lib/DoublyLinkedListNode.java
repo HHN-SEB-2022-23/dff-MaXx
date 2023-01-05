@@ -6,12 +6,12 @@ import java.util.Optional;
  * Ein Feld in der DoublyLinkedList
  */
 public class DoublyLinkedListNode<T> {
+    public final boolean isAnchor;
     protected T data;
     protected DoublyLinkedListNode<T> north;
     protected DoublyLinkedListNode<T> south;
     protected DoublyLinkedListNode<T> east;
     protected DoublyLinkedListNode<T> west;
-    public final boolean isAnchor;
 
     public DoublyLinkedListNode(T data, boolean isAnchor) {
         this.data = data;

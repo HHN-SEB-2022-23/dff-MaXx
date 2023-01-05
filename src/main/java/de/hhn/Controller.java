@@ -26,19 +26,19 @@ public class Controller {
 
             var move = this.view.getNextMove();
             if (move.isEmpty()) {
-                break gameloop;
+                break;
             }
 
             this.updateModel(move.get());
 
             if (this.model.characterB.getPoints().compareTo(Fraction.FIFTY_THREE) > 0) {
                 GameScreen.drawWinner(this.model.characterB);
-                break gameloop;
+                break;
             }
 
             if (this.model.characterW.getPoints().compareTo(Fraction.FIFTY_THREE) > 0) {
                 GameScreen.drawWinner(this.model.characterW);
-                break gameloop;
+                break;
             }
         }
 
@@ -47,8 +47,8 @@ public class Controller {
 
     private void updateModel(Move move) {
         var character = this.currentPlayer == CharacterKind.WHITE
-            ? this.model.characterW
-            : this.model.characterB;
+                        ? this.model.characterW
+                        : this.model.characterB;
 
         character.move(move.target);
     }
