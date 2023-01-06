@@ -24,7 +24,7 @@ public class GameScreen {
     }
 
     private static void printHead(char c, StringBuilder sb) {
-        sb.append(" ┿");
+        sb.append('┿');
         var space = "━━".repeat(GameScreen.fieldSize << 1);
         sb.append(space);
         sb.append(c);
@@ -42,7 +42,7 @@ public class GameScreen {
 
     private static void printPlayerPoints(ReadOnlyCharacter character, StringBuilder sb) {
         sb.append(String.format(
-            "Player W has %s points (~ %d)%n",
+            "Player W has %s points (~%d)%n",
             character.getPoints(),
             character.getPoints().intValue()
         ));
@@ -73,7 +73,7 @@ public class GameScreen {
 
         var sb = new StringBuilder();
         GameScreen.printHead('N', sb);
-        sb.append(" │ ");
+        sb.append("│ ");
         var y = 0;
         var x = 0;
         while (true) {
@@ -103,11 +103,14 @@ public class GameScreen {
                 if (south.isPresent()) {
                     y++;
                     x = 0;
-                    if (y == 4) {
-                        sb.append("│E\nW│ ");
+                    if (y == 3) {
+                        sb.append("│\nW ");
+                    }
+                    else if (y == 4) {
+                        sb.append("E\n│ ");
                     }
                     else {
-                        sb.append("│ \n │ ");
+                        sb.append("│ \n│ ");
                     }
 
                     currentNode = rowStart = south.get();

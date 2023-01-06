@@ -11,13 +11,11 @@ public class Controller {
     private final GameScreen view;
     private final Board model;
     private CharacterKind currentPlayer;
-    private final RuleChecker ruleChecker;
 
     public Controller() {
         this.view = new GameScreen();
         this.model = new Board();
         this.currentPlayer = CharacterKind.WHITE;
-        this.ruleChecker = new RuleChecker();
     }
 
     private boolean gameLoop() {
@@ -28,7 +26,6 @@ public class Controller {
             this.currentPlayer = this.currentPlayer.getOpposite()
         );
 
-
         while (true) {
             Optional<Move> moveOpt = this.view.getNextMove();
 
@@ -38,7 +35,7 @@ public class Controller {
 
             var move = moveOpt.get();
 
-            if (!this.ruleChecker.isValidMove(move)) {
+            if (!RuleChecker.isValidMove(move, this.model.getCharacter(this.currentPlayer))) {
                 GameScreen.drawInvalidMove(move.characterKind);
                 continue;
             }
