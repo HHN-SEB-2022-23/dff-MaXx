@@ -34,4 +34,12 @@ public class Board {
             new Vector2D(3, 2)
         );
     }
+
+    public Character getCharacter(CharacterKind kind) {
+        if (kind == CharacterKind.BLACK) {
+            return this.characterB;
+        }
+
+        return this.characterW;
+    }
 }

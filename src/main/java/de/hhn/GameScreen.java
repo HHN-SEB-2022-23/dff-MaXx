@@ -156,22 +156,35 @@ public class GameScreen {
                     return Optional.empty();
                 }
                 case "no" -> {
-                    if (this.currentPlayer == CharacterKind.WHITE) {
-                        return Optional.of(
-                            new Move(this.currentPlayer, new Vector2D(1, -1))
-                        );
-                    }
+                    return Optional.of(
+                        new Move(this.currentPlayer, new Vector2D(1, -1))
+                    );
                 }
                 case "sw" -> {
-                    if (this.currentPlayer == CharacterKind.BLACK) {
-                        return Optional.of(
-                            new Move(this.currentPlayer, new Vector2D(-1, 1))
-                        );
-                    }
+                    return Optional.of(
+                        new Move(this.currentPlayer, new Vector2D(-1, 1))
+                    );
                 }
             }
 
-            System.out.println("Ungültige Eingabe!");
+            System.out.println("Ungültige Eingabe! Gib eine Himmelsrichtung an, in die du dich bewegen möchtest.");
         }
+    }
+
+    public static void drawInvalidMove(CharacterKind kind) {
+        System.out.printf("Player %s: Ungültiger Zug!%n", kind);
+
+        var sb = new StringBuilder();
+
+        sb.append("Erlaubte Bewegungen sind: N E S W ");
+
+        if (kind == CharacterKind.BLACK) {
+            sb.append("SW");
+        }
+        else {
+            sb.append("NO");
+        }
+
+        System.out.println(sb);
     }
 }
