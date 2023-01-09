@@ -23,13 +23,23 @@ public class GameScreen {
         this.scanner = new Scanner(System.in);
     }
 
-    private static void printHead(char c, StringBuilder sb) {
+    private static void printHead(char c, StringBuilder sb, boolean no, boolean sw) {
+        if (sw) {
+            sb.append("SW");
+        }
+        else {
+            sb.append("  ");
+        }
         sb.append('┿');
         var space = "━━".repeat(GameScreen.fieldSize << 1);
         sb.append(space);
         sb.append(c);
         sb.append(space);
-        sb.append("┿\n");
+        sb.append('┿');
+        if (no) {
+            sb.append("NO");
+        }
+        sb.append('\n');
     }
 
     private static void printField(Object field, StringBuilder sb) {
@@ -73,8 +83,8 @@ public class GameScreen {
         var currentNode = rowStart;
 
         var sb = new StringBuilder();
-        GameScreen.printHead('N', sb);
-        sb.append("│ ");
+        GameScreen.printHead('N', sb, nextMovingCharacter == CharacterKind.WHITE, false);
+        sb.append("  │ ");
         var y = 0;
         var x = 0;
         while (true) {
@@ -105,13 +115,13 @@ public class GameScreen {
                     y++;
                     x = 0;
                     if (y == 3) {
-                        sb.append("│\nW ");
+                        sb.append("│\n  W ");
                     }
                     else if (y == 4) {
-                        sb.append("E\n│ ");
+                        sb.append("E\n  │ ");
                     }
                     else {
-                        sb.append("│ \n│ ");
+                        sb.append("│ \n  │ ");
                     }
 
                     currentNode = rowStart = south.get();
@@ -123,7 +133,7 @@ public class GameScreen {
             }
         }
 
-        GameScreen.printHead('S', sb);
+        GameScreen.printHead('S', sb, false, nextMovingCharacter == CharacterKind.BLACK);
         GameScreen.printPlayerPoints(this.characterB, sb);
         GameScreen.printPlayerPoints(this.characterW, sb);
         GameScreen.clearScreen();
