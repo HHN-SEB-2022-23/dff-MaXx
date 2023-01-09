@@ -42,7 +42,8 @@ public class GameScreen {
 
     private static void printPlayerPoints(ReadOnlyCharacter character, StringBuilder sb) {
         sb.append(String.format(
-            "Player W has %s points (~%d)%n",
+            "Player %s has %s points (~%d)%n",
+            character.getKind(),
             character.getPoints(),
             character.getPoints().intValue()
         ));
@@ -189,5 +190,7 @@ public class GameScreen {
         }
 
         System.out.println(sb);
+
+        System.out.println("Die Spielfigur darf das Spielbrett nicht verlassen");
     }
 }

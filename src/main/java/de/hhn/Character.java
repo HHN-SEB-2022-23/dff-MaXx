@@ -40,6 +40,11 @@ public class Character implements ReadOnlyCharacter {
         return this.kind.toString();
     }
 
+    @Override
+    public CharacterKind getKind() {
+        return this.kind;
+    }
+
     public void move(Vector2D direction) {
         this.position = this.position.add(direction);
 

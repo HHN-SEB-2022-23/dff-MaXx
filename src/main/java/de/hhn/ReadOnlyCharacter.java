@@ -11,4 +11,6 @@ public interface ReadOnlyCharacter {
     Vector2D getPosition();
 
     String toString();
+
+    CharacterKind getKind();
 }
