@@ -42,6 +42,14 @@ public class GameScreen {
         sb.append('\n');
     }
 
+    private static void printField(Object a, Object b, StringBuilder sb) {
+        var fieldStr = String.format("%s&%s", a, b);
+        sb.append(String.format(
+            GameScreen.fieldFormat,
+            " ".repeat(( GameScreen.fieldSize >> 1 ) - ( fieldStr.length() >> 1 ) - 1) + fieldStr
+        ));
+    }
+
     private static void printField(Object field, StringBuilder sb) {
         var fieldStr = field.toString();
         sb.append(String.format(
@@ -88,8 +96,15 @@ public class GameScreen {
         var y = 0;
         var x = 0;
         while (true) {
+            // Character B & W here?
+            if (x == characterB.getPosition().x() && x == characterW.getPosition().x()
+                && y == characterB.getPosition().y() && y == characterW.getPosition().y()
+            ) {
+                GameScreen.printField(characterB, characterW, sb);
+            }
+
             // Character B here?
-            if (x == characterB.getPosition().x() && y == characterB.getPosition().y()) {
+            else if (x == characterB.getPosition().x() && y == characterB.getPosition().y()) {
                 GameScreen.printField(characterB, sb);
             }
 

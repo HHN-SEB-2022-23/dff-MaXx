@@ -41,6 +41,7 @@ public class Controller {
             }
 
             this.updateModel(move);
+            this.checkKill(move.characterKind);
             return this.checkWinner();
         }
     }
@@ -67,6 +68,17 @@ public class Controller {
         }
 
         return false;
+    }
+
+    private void checkKill(CharacterKind maymeKiller) {
+        var killerCharacter = this.model.getCharacter(maymeKiller);
+        var targetCharacter = this.model.getCharacter(maymeKiller.getOpposite());
+
+        if (killerCharacter.getPosition().equals(targetCharacter.getPosition())) {
+            killerCharacter.incrementPoints(targetCharacter.getPoints());
+            targetCharacter.resetPoints();
+            targetCharacter.teleport(Board.startBlack);
+        }
     }
 
     private void updateModel(Move move) {

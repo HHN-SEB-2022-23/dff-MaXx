@@ -11,6 +11,8 @@ public class Board {
     public final Character characterB;
     public final Character characterW;
     public final DoublyLinkedList<Field> fields;
+    public static final Vector2D startBlack = new Vector2D(4, 5);
+    public static final Vector2D startWhite = new Vector2D(3, 2);
 
     public Board() {
         Field[][] fieldsMatrix = new Field[ 8 ][ 8 ];
@@ -24,13 +26,13 @@ public class Board {
 
         this.characterB = new Character(
             CharacterKind.BLACK,
-            this.fields.getAt(new Vector2D(4, 5)),
+            this.fields.getAt(Board.startBlack),
             new Vector2D(4, 5)
         );
 
         this.characterW = new Character(
             CharacterKind.WHITE,
-            this.fields.getAt(new Vector2D(3, 2)),
+            this.fields.getAt(Board.startWhite),
             new Vector2D(3, 2)
         );
     }
@@ -41,5 +43,13 @@ public class Board {
         }
 
         return this.characterW;
+    }
+
+    public static Vector2D getStartFor(CharacterKind kind) {
+        if (kind == CharacterKind.BLACK) {
+            return Board.startBlack;
+        }
+
+        return Board.startWhite;
     }
 }

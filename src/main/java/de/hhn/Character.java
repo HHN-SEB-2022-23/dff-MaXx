@@ -30,9 +30,17 @@ public class Character implements ReadOnlyCharacter {
         return this.points;
     }
 
+    public void resetPoints() {
+        this.points = Fraction.ZERO;
+    }
+
     @Override
     public Vector2D getPosition() {
         return this.position;
+    }
+
+    public void teleport(Vector2D targetPosition) {
+        this.position = targetPosition;
     }
 
     @Override

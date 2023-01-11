@@ -9,7 +9,7 @@ public class RandomFractionService {
     // Wenn Brüche mit Primzahlen als Nenner und Zähler erstellt werden, sind diese nicht weiter kürzbar.
     // Wenn der Nenner einen höheren Wert als der Zähler hat, ist der Wert des Bruches größer als 1.
 
-    private static final int range = 15;
+    private static final int range = 25;
     private static final int rangePlusOne = RandomFractionService.range + 1;
     private final int[] primes = {
         11,
