@@ -39,8 +39,9 @@ public class Character implements ReadOnlyCharacter {
         return this.position;
     }
 
-    public void teleport(Vector2D targetPosition) {
+    public void teleport(Vector2D targetPosition, DoublyLinkedListNode<Field> targetField) {
         this.position = targetPosition;
+        this.fieldNode = targetField;
     }
 
     @Override

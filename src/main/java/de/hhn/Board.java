@@ -1,6 +1,7 @@
 package de.hhn;
 
 import de.hhn.lib.DoublyLinkedList;
+import de.hhn.lib.DoublyLinkedListNode;
 import de.hhn.lib.Vector2D;
 
 /**
@@ -45,11 +46,15 @@ public class Board {
         return this.characterW;
     }
 
-    public static Vector2D getStartFor(CharacterKind kind) {
+    public static Vector2D getStartPositionFor(CharacterKind kind) {
         if (kind == CharacterKind.BLACK) {
             return Board.startBlack;
         }
 
         return Board.startWhite;
+    }
+
+    public DoublyLinkedListNode<Field> getStartFieldFor(CharacterKind kind) {
+        return this.fields.getAt(Board.getStartPositionFor(kind));
     }
 }
