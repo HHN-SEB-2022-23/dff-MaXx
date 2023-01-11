@@ -8,14 +8,12 @@ import de.hhn.lib.Vector2D;
  */
 public class Character implements ReadOnlyCharacter {
     private final CharacterKind kind;
-    public DoublyLinkedListNode<Field> fieldNode;
+    private DoublyLinkedListNode<Field> fieldNode;
     private Fraction points;
-    private Vector2D position;
 
-    public Character(CharacterKind kind, DoublyLinkedListNode<Field> fieldNode, Vector2D position) {
+    public Character(CharacterKind kind, DoublyLinkedListNode<Field> fieldNode) {
         this.points = Fraction.ZERO;
         this.kind = kind;
-        this.position = position;
         this.fieldNode = fieldNode;
 
         this.fieldNode.getData().setZero();
@@ -36,11 +34,10 @@ public class Character implements ReadOnlyCharacter {
 
     @Override
     public Vector2D getPosition() {
-        return this.position;
+        return this.fieldNode.getData().position;
     }
 
-    public void teleport(Vector2D targetPosition, DoublyLinkedListNode<Field> targetField) {
-        this.position = targetPosition;
+    public void teleport(DoublyLinkedListNode<Field> targetField) {
         this.fieldNode = targetField;
     }
 
@@ -55,8 +52,6 @@ public class Character implements ReadOnlyCharacter {
     }
 
     public void move(Vector2D direction) {
-        this.position = this.position.add(direction);
-
         if (direction.x() > 0) {
             this.fieldNode.getEast()
                 .ifPresent(eastNode -> this.fieldNode = eastNode);

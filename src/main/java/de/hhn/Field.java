@@ -1,5 +1,6 @@
 package de.hhn;
 
+import de.hhn.lib.Vector2D;
 import de.hhn.services.RandomFractionService;
 
 /**
@@ -11,9 +12,11 @@ public class Field implements ReadOnlyField {
 
     private static final RandomFractionService rfs = new RandomFractionService();
     private Fraction value;
+    public final Vector2D position;
 
-    public Field() {
+    public Field(Vector2D position) {
         this.value = Field.rfs.nextFraction();
+        this.position = position;
     }
 
     @Override
@@ -23,10 +26,6 @@ public class Field implements ReadOnlyField {
         }
 
         return this.value.toString();
-    }
-
-    public void setRandomValue() {
-        this.value = Field.rfs.nextFraction();
     }
 
     public Fraction getValue() {

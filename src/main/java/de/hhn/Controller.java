@@ -77,10 +77,7 @@ public class Controller {
         if (killerCharacter.getPosition().equals(targetCharacter.getPosition())) {
             killerCharacter.incrementPoints(targetCharacter.getPoints());
             targetCharacter.resetPoints();
-            targetCharacter.teleport(
-                Board.getStartPositionFor(targetCharacter.getKind()),
-                this.model.getStartFieldFor(targetCharacter.getKind())
-            );
+            targetCharacter.teleport(this.model.getStartFieldFor(targetCharacter.getKind()));
         }
     }
 

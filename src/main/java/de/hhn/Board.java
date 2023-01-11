@@ -19,7 +19,7 @@ public class Board {
         Field[][] fieldsMatrix = new Field[ 8 ][ 8 ];
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                fieldsMatrix[ i ][ j ] = new Field();
+                fieldsMatrix[ i ][ j ] = new Field(new Vector2D(j, i));
             }
         }
 
@@ -27,14 +27,12 @@ public class Board {
 
         this.characterB = new Character(
             CharacterKind.BLACK,
-            this.fields.getAt(Board.startBlack),
-            new Vector2D(4, 5)
+            this.fields.getAt(Board.startBlack)
         );
 
         this.characterW = new Character(
             CharacterKind.WHITE,
-            this.fields.getAt(Board.startWhite),
-            new Vector2D(3, 2)
+            this.fields.getAt(Board.startWhite)
         );
     }
 
