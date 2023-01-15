@@ -1,74 +1,204 @@
-@startuml
-class Vector2D {
-    + Vector2D(x: integer, y: integer)
-    + getX(): integer
-    + getY(): integer
+@startuml clasdiagram
+skinparam classAttributeIconSize 0
+
+package lib {
+    class Vector2D {
+        - int x
+        - int y
+        + <<Create>> Vector2D(int,int)
+        + Vector2D add(Vector2D)
+        + int x()
+        + int y()
+        + boolean equals(Object)
+        + int hashCode()
+    }
+
+    class DoublyLinkedList {
+        - DoublyLinkedListNode<T> anchor
+        + <<Create>> DoublyLinkedList(DoublyLinkedListNode<T>)
+        # <<Create>> DoublyLinkedList(T)
+        # {static} DoublyLinkedListNode<U> constructFromMatrix(U[][],int,int,int,int,DoublyLinkedListNode<U>[][])
+        + {static} DoublyLinkedList<T> from(T[][])
+        + DoublyLinkedListNode<T> getAt(Vector2D)
+        + DoublyLinkedListNode<T> getAnchor()
+    }
+    DoublyLinkedList *-- DoublyLinkedListNode
+
+    class DoublyLinkedListNode {
+        + boolean isAnchor
+        # T data
+        # DoublyLinkedListNode<T> north
+        # DoublyLinkedListNode<T> south
+        # DoublyLinkedListNode<T> east
+        # DoublyLinkedListNode<T> west
+        + <<Create>> DoublyLinkedListNode(T,boolean)
+        + T getData()
+        + Optional<DoublyLinkedListNode<T>> getNorth()
+        + Optional<DoublyLinkedListNode<T>> setNorth(DoublyLinkedListNode<T>)
+        + Optional<DoublyLinkedListNode<T>> getSouth()
+        + Optional<DoublyLinkedListNode<T>> setSouth(DoublyLinkedListNode<T>)
+        + Optional<DoublyLinkedListNode<T>> getEast()
+        + Optional<DoublyLinkedListNode<T>> setEast(DoublyLinkedListNode<T>)
+        + Optional<DoublyLinkedListNode<T>> getWest()
+        + Optional<DoublyLinkedListNode<T>> setWest(DoublyLinkedListNode<T>)
+    }
 }
 
-class Fraction {
-    - numerator: integer
-    - denominator: integer
-    + Fraction(numerator: integer, denominator: integer)
-    + toString(): text
+package services {
+    class RuleChecker {
+        + {static} boolean isValidMove(Move,ReadOnlyCharacter)
+        - {static} boolean isOutOfBounds(Vector2D)
+    }
+
+    class RandomFractionService {
+        - {static} int range
+        - {static} int rangePlusOne
+        - int[] primes
+        - {static} int getRandomInt(int,int)
+        + Fraction nextFraction()
+    }
 }
 
-interface ReadonlyField {
-    + toString(): text
-}
-
-class Field implements ReadonlyField {
-    - value: Fraction
-    + toString(): text
-    + setRandomValue(): void
-    + setZero(): void
-}
-Field "1" *-- "1" Fraction
-
-interface ReadonlyCharacter {
-    + getPoints(): integer
-    + getPosition(): Vector2D
-}
-
-class Character implements ReadonlyCharacter {
-    - points: integer
-    - position: Vector2D
-    + incrementPoints(inc: integer): void
-    + getPoints(): integer
-    + getPosition(): Vector2D
-}
-Character "1" *-- "1" Vector2D
-
-class Board {
-    - characterB: Character
-    - characterW: Character
-    - fields: DoublyLinkedList<Field>
-}
-Board "1" *-- "2" Character
-Board "1" *-- "64" Field
-
-class GameScreen {
-    + draw(fields: DoublyLinkedList<ReadonlyField>, characterB: ReadonlyCharacter, characterW: ReadonlyCharacter, nextMove: CharacterKind): void
-    + getNextMove(): Move
+enum CharacterKind {
+    +  BLACK
+    +  WHITE
+    - String displayName
+    ~ <<Create>> CharacterKind(String)
+    + String toString()
+    + CharacterKind getOpposite()
 }
 
 class Move {
-    +Move(characterKind: CharacterKind, to: Vector2D)
-    +characterKind CharacterKind
-    +target Vector2D
+    + CharacterKind characterKind
+    + Vector2D target
+    + <<Create>> Move(CharacterKind,Vector2D)
 }
-Move "1" *-- "1" Vector2D
-Move "1" *-- "1" CharacterKind
 
-class Controller {
-    -gameScreen: GameScreen
-    -board: Board
+interface View.ReadOnlyField {
+    ~ String toString()
 }
-Controller "1" *-- "1" GameScreen
-Controller "1" *-- "1" Board
 
-enum CharacterKind {
-    B
-    W
+interface View.ReadOnlyCharacter {
+    ~ Fraction getPoints()
+    ~ Vector2D getPosition()
+    ~ String toString()
+    ~ CharacterKind getKind()
 }
+
+package Model <<Rectangle>> #30e090 {
+    class Field {
+        - {static} RandomFractionService rfs
+        - Fraction value
+        + Vector2D position
+        + <<Create>> Field(Vector2D)
+        + String toString()
+        + Fraction getValue()
+        + void setZero()
+    }
+    Field ..|> View.ReadOnlyField
+
+    class Character {
+        - CharacterKind kind
+        - DoublyLinkedListNode<Field> fieldNode
+        - Fraction points
+        + <<Create>> Character(CharacterKind,DoublyLinkedListNode<Field>)
+        + void incrementPoints(Fraction)
+        + Fraction getPoints()
+        + void resetPoints()
+        + Vector2D getPosition()
+        + void teleport(DoublyLinkedListNode<Field>)
+        + String toString()
+        + CharacterKind getKind()
+        + void move(Vector2D)
+    }
+    Character ..|> View.ReadOnlyCharacter
+    Character *-- CharacterKind
+    Character *-- Fraction
+    Character *-- DoublyLinkedListNode
+    Character *-- Vector2D
+
+    class Board {
+        + Character characterB
+        + Character characterW
+        + DoublyLinkedList<Field> fields
+        + {static} Vector2D startBlack
+        + {static} Vector2D startWhite
+        + <<Create>> Board()
+        + Character getCharacter(CharacterKind)
+        + {static} Vector2D getStartPositionFor(CharacterKind)
+        + DoublyLinkedListNode<Field> getStartFieldFor(CharacterKind)
+    }
+    Board *-- DoublyLinkedList
+    Board *-- Vector2D
+    Board *-- Character
+}
+
+package View <<Rectangle>> #e0b040 {
+    class GameScreen {
+        # {static} int fieldSize
+        # {static} String fieldFormat
+        + <<Create>> GameScreen()
+        - {static} void printHead(char,StringBuilder,boolean,boolean)
+        - {static} void printField(Object,Object,StringBuilder)
+        - {static} void printField(Object,StringBuilder)
+        - {static} void printPlayerPoints(ReadOnlyCharacter,StringBuilder)
+        + {static} void drawWinner(ReadOnlyCharacter)
+        # {static} void clearScreen()
+        + void draw(DoublyLinkedList<? extends ReadOnlyField>,ReadOnlyCharacter,ReadOnlyCharacter,CharacterKind)
+        + Optional<Move> getNextMove()
+        + {static} void drawInvalidMove(CharacterKind)
+    }
+}
+
+class Fraction {
+    + {static} Fraction ZERO
+    + {static} Fraction FIFTY_THREE
+    - BigInteger numerator
+    - BigInteger denominator
+    + <<Create>> Fraction(Number,Number)
+    + <<Create>> Fraction(BigInteger,BigInteger)
+    + {static} Fraction parse(String)
+    + {static} Fraction from(Number)
+    + {static} Fraction from(Number,Number)
+    + BigInteger getNumerator()
+    + BigInteger getDenominator()
+    ~ Fraction add(Fraction)
+    ~ Fraction subtract(Fraction)
+    ~ Fraction multiply(Fraction)
+    ~ Fraction divide(Fraction)
+    + String toString()
+    ~ boolean isInteger()
+    + int intValue()
+    + long longValue()
+    + float floatValue()
+    + double doubleValue()
+    - BigDecimal toBigDecimal()
+    + int compareTo(Fraction)
+    + int hashCode()
+    + boolean equals(Object)
+}
+Fraction ..|> Comparable
+Fraction --|> Number
+
+class Controller #b0a0e0 {
+    - GameScreen view
+    - Board model
+    - CharacterKind currentPlayer
+    + <<Create>> Controller()
+    - boolean gameLoop()
+    + void start()
+    - boolean checkWinner()
+    - void checkKill(CharacterKind)
+    - void updateModel(Move)
+}
+Controller --> RuleChecker
+Controller *-- GameScreen
+Controller *-- Board
+Controller *-- CharacterKind
+
+class Main {
+    + {static} void main(String[])
+}
+Main --> Controller
 
 @enduml
