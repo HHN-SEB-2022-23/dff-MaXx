@@ -37,7 +37,7 @@ public class GameScreen {
         sb.append(space);
         sb.append('┿');
         if (no) {
-            sb.append("NO");
+            sb.append("NE");
         }
         sb.append('\n');
     }
@@ -176,7 +176,7 @@ public class GameScreen {
                         new Move(this.currentPlayer, new Vector2D(-1, 0))
                     );
                 }
-                case "e" -> {
+                case "e", "o" -> {
                     return Optional.of(
                         new Move(this.currentPlayer, new Vector2D(1, 0))
                     );
@@ -184,7 +184,7 @@ public class GameScreen {
                 case "q", "quit", "exit", "stop" -> {
                     return Optional.empty();
                 }
-                case "no" -> {
+                case "ne", "no" -> {
                     return Optional.of(
                         new Move(this.currentPlayer, new Vector2D(1, -1))
                     );
@@ -211,7 +211,7 @@ public class GameScreen {
             sb.append("SW");
         }
         else {
-            sb.append("NO");
+            sb.append("NE");
         }
 
         System.out.println(sb);
