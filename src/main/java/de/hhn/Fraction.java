@@ -147,7 +147,7 @@ public class Fraction extends Number implements Comparable<Fraction> {
     }
 
     private BigDecimal toBigDecimal() {
-        return new BigDecimal(this.numerator).divide(new BigDecimal(this.denominator), RoundingMode.HALF_UP);
+        return new BigDecimal(this.numerator).divide(new BigDecimal(this.denominator), 10, RoundingMode.HALF_UP);
     }
 
     /**
