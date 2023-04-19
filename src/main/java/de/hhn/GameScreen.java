@@ -7,13 +7,11 @@ import de.hhn.services.RuleChecker;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-
-import static javax.swing.JOptionPane.showMessageDialog;
 
 /**
  * Oberfläche für das Spiel.
@@ -26,17 +24,16 @@ public class GameScreen extends JFrame {
     protected static final Color fairlyLightGray = new Color(115, 100, 110);
     protected static final Color whiteSmoke = new Color(245, 245, 245);
     protected static final Font font = new Font("Arial", Font.PLAIN, 18);
+    protected static Border defaultBorder = BorderFactory.createLineBorder(GameScreen.fairlyLightGray, 1);
+    protected static Border highlightBorder = BorderFactory.createLineBorder(GameScreen.deepPink, 2);
     protected final Map<Vector2D, GameField> fields = new HashMap<>(64);
     private final FractionLabel statusBlackEl;
     private final FractionLabel statusWhiteEl;
-    protected Border defaultBorder = BorderFactory.createLineBorder(GameScreen.fairlyLightGray, 1);
-    protected Border selectableBorder = BorderFactory.createLineBorder(GameScreen.deepPink, 2);
     private ReadOnlyCharacter currentChar;
-    private final Controller controller;
 
     public GameScreen(Controller controller) {
         super("MaXx");
-        this.controller = controller;
+        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setBackground(GameScreen.veryDarkGray);
         var mainPanel = new JPanel();
@@ -52,19 +49,35 @@ public class GameScreen extends JFrame {
                 var fieldEl = new GameField(fieldPos);
                 fieldEl.setFont(GameScreen.font);
                 fieldEl.setForeground(GameScreen.whiteSmoke);
-                fieldEl.setOpaque(true);
+                fieldEl.setOpaque(false);
                 fieldEl.setPreferredSize(fieldElSize);
-                fieldEl.addActionListener(this.controller);
+                fieldEl.addActionListener(controller);
                 gridPanel.add(fieldEl);
                 this.fields.put(fieldPos, fieldEl);
             }
         }
         mainPanel.add(gridPanel);
 
-        var fractionSize = new Dimension(32, 64);
         var statusPanel = new JPanel();
         statusPanel.setOpaque(false);
-        statusPanel.setLayout(new GridLayout(2, 2));
+        statusPanel.setLayout(new GridLayout(2, 3));
+        mainPanel.add(statusPanel);
+
+        statusPanel.add(new SimpleButton("Manual", e -> {
+            MessageDialog.show("Manual",
+                "<html>" +
+                "<p>Bewege die Figuren per klick auf ein begehbares Feld.</p>" +
+                "<p>Begehbare Felder sind mit einer Umrandung gekennzeichnet.</p>" +
+                "<p>Beide Figuren können sich in die vier Himmeldrichtungen bewegen.</p>" +
+                "<p>Die weiße Figur kann sich auch nach Nord Osten bewegen,</p>" +
+                "<p>die schwarze Figur nach Nord Westen.</p>" +
+                "<p>Schwarz beginnt.</p>" +
+                "<p>Wenn ein Spieler das Feld eines anderen Spielers betritt, wird dieser geschlagen,</p>" +
+                "<p>der geschlagene Spieler gibt seine Punkte an seinen Gegner ab und wird auf das Startfeld gesetzt.</p>" +
+                "</html>"
+            );
+        }));
+
         var statusBlackLabel = new JLabel("Black:");
         statusBlackLabel.setFont(GameScreen.font);
         statusBlackLabel.setForeground(GameScreen.whiteSmoke);
@@ -75,8 +88,15 @@ public class GameScreen extends JFrame {
         this.statusBlackEl.setFont(GameScreen.font);
         this.statusBlackEl.setForeground(GameScreen.whiteSmoke);
         this.statusBlackEl.setBackground(GameScreen.veryDarkGray);
-        this.statusBlackEl.setPreferredSize(fractionSize);
+        this.statusBlackEl.setPreferredSize(fieldElSize);
         statusPanel.add(this.statusBlackEl);
+
+        statusPanel.add(new SimpleButton("Credits", e -> {
+            var contributors = Arrays.asList("Frank Mayer", "René Ott", "Antonia Friese", "Felix Marzioch");
+            Collections.shuffle(contributors);
+            MessageDialog.show("Credits", String.join(", ", contributors));
+        }));
+
         var statusWhiteLabel = new JLabel("White:");
         statusWhiteLabel.setFont(GameScreen.font);
         statusWhiteLabel.setForeground(GameScreen.whiteSmoke);
@@ -87,9 +107,8 @@ public class GameScreen extends JFrame {
         this.statusWhiteEl.setFont(GameScreen.font);
         this.statusWhiteEl.setForeground(GameScreen.whiteSmoke);
         this.statusWhiteEl.setBackground(GameScreen.veryDarkGray);
-        this.statusWhiteEl.setPreferredSize(fractionSize);
+        this.statusWhiteEl.setPreferredSize(fieldElSize);
         statusPanel.add(this.statusWhiteEl);
-        mainPanel.add(statusPanel);
 
         this.add(mainPanel);
 
@@ -99,7 +118,7 @@ public class GameScreen extends JFrame {
     }
 
     public static void drawWinner(Character characterB) {
-        showMessageDialog(null, "Player %s is the winner".formatted(characterB));
+        MessageDialog.show("Finished", "Player %s is the winner".formatted(characterB));
     }
 
     private static void renderFraction(Graphics g, FontMetrics fm, JComponent component, Fraction fraction) {
@@ -153,14 +172,14 @@ public class GameScreen extends JFrame {
                 var data = currentFld.getData();
                 var fieldEl = this.fields.get(data.position);
                 var backgroundColor = GameScreen.veryDarkGray;
-                var border = this.defaultBorder;
+                var border = GameScreen.defaultBorder;
                 var textColor = GameScreen.whiteSmoke;
                 if (data.position == characterB.getPosition()) {
                     fieldEl.setText(characterB.toString());
                     if (characterKind == CharacterKind.BLACK) {
                         backgroundColor = GameScreen.deepPink;
                         textColor = GameScreen.veryDarkGray;
-                        border = this.selectableBorder;
+                        border = GameScreen.highlightBorder;
                     }
                     else {
                         textColor = GameScreen.deepPink;
@@ -171,7 +190,7 @@ public class GameScreen extends JFrame {
                     if (characterKind == CharacterKind.WHITE) {
                         backgroundColor = GameScreen.deepPink;
                         textColor = GameScreen.veryDarkGray;
-                        border = this.selectableBorder;
+                        border = GameScreen.highlightBorder;
                     }
                     else {
                         textColor = GameScreen.deepPink;
@@ -182,7 +201,7 @@ public class GameScreen extends JFrame {
                 }
 
                 if (Arrays.stream(currentlyPossibleMoves).anyMatch(data.position::equals)) {
-                    border = this.selectableBorder;
+                    border = GameScreen.highlightBorder;
                     fieldEl.setEnabled(true);
                 }
                 else {
@@ -281,6 +300,58 @@ public class GameScreen extends JFrame {
         public void setFraction(Fraction points) {
             this.fraction = points;
             this.repaint();
+        }
+    }
+
+    private static class MessageDialog extends JDialog {
+        public MessageDialog(String title, String message) {
+            this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+            this.setMinimumSize(new Dimension(300, 150));
+            this.setBackground(GameScreen.veryDarkGray);
+            this.setForeground(GameScreen.whiteSmoke);
+            this.setModal(true);
+            this.setResizable(false);
+            this.setTitle(title);
+
+            var panel = new JPanel();
+            panel.setBackground(GameScreen.veryDarkGray);
+            panel.setLayout(new BorderLayout());
+            panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+            var textEl = new JLabel(message);
+            textEl.setForeground(GameScreen.whiteSmoke);
+            textEl.setOpaque(false);
+            panel.add(textEl);
+
+            var button = new SimpleButton("OK", e -> this.dispose());
+            panel.add(button, BorderLayout.SOUTH);
+
+            this.add(panel);
+            this.pack();
+            this.setLocationRelativeTo(null);
+            this.setVisible(true);
+        }
+
+        public static void show(String title, String message) {
+            new MessageDialog(title, message);
+        }
+    }
+
+    private static class SimpleButton extends JButton {
+        public SimpleButton(String text, ActionListener onCLick) {
+            this(text);
+            this.addActionListener(onCLick);
+        }
+
+        public SimpleButton(String text) {
+            super(text);
+            this.setFont(GameScreen.font);
+            this.setOpaque(false);
+            this.setBackground(GameScreen.veryDarkGray);
+            this.setForeground(GameScreen.deepPink);
+            this.setRolloverEnabled(false);
+            this.setFocusable(false);
+            this.setBorderPainted(false);
         }
     }
 }
