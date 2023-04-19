@@ -4,8 +4,8 @@ package de.hhn;
  * Die möglichen Figurenarten.
  */
 public enum CharacterKind {
-    BLACK("B"),
-    WHITE("W");
+    BLACK("Black"),
+    WHITE("White");
 
     private final String displayName;
 

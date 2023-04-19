@@ -22,9 +22,9 @@ public class Fraction extends Number implements Comparable<Fraction> {
             throw new IllegalArgumentException("Denominator must not be zero.");
         }
 
-        var gcd = numerator.gcd(denominator);
-        this.numerator = numerator.divide(gcd);
-        this.denominator = denominator.divide(gcd);
+//        var gcd = numerator.gcd(denominator);
+        this.numerator = numerator;//.divide(gcd);
+        this.denominator = denominator;//.divide(gcd);
     }
 
     public static Fraction parse(String s) throws NumberFormatException {
