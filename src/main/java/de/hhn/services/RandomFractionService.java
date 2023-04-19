@@ -9,9 +9,7 @@ public class RandomFractionService {
     // Wenn Brüche mit Primzahlen als Nenner und Zähler erstellt werden, sind diese nicht weiter kürzbar.
     // Wenn der Nenner einen höheren Wert als der Zähler hat, ist der Wert des Bruches größer als 1.
 
-    private static final int range = 50;
-    private static final int rangePlusOne = RandomFractionService.range + 1;
-    private final int[] primes = {
+    private static final int[] primes = {
         11,
         13,
         17,
@@ -177,6 +175,8 @@ public class RandomFractionService {
         991,
         997
     };
+    private static final int highestIndex = RandomFractionService.primes.length - 1;
+    private static final int topRangeStart = RandomFractionService.highestIndex - 75;
 
     /**
      * Gibt eine zufällige Ganzzahl von min bis max zurück.
@@ -191,12 +191,12 @@ public class RandomFractionService {
 
     public Fraction nextFraction() {
         // Zufälligen Index für den Nenner und Zähler auswählen
-        var index1 = RandomFractionService.getRandomInt(RandomFractionService.rangePlusOne, this.primes.length - 1);
-        var index2 = index1 - RandomFractionService.getRandomInt(1, RandomFractionService.range);
-
-        return new Fraction(
-            this.primes[ index1 ],
-            this.primes[ index2 ]
+        var index1 = RandomFractionService.getRandomInt(
+            RandomFractionService.topRangeStart,
+            RandomFractionService.highestIndex
         );
+        var index2 = RandomFractionService.getRandomInt(0, Math.max(index1 - 25, 5));
+
+        return new Fraction(RandomFractionService.primes[ index1 ], RandomFractionService.primes[ index2 ]);
     }
 }
