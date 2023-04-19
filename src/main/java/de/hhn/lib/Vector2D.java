@@ -21,6 +21,10 @@ public final class Vector2D {
         return new Vector2D(this.x + other.x(), this.y + other.y());
     }
 
+    public Vector2D relativeTo(Vector2D other) {
+        return new Vector2D(this.x - other.x(), this.y - other.y());
+    }
+
     public int x() {
         return this.x;
     }
@@ -31,15 +35,17 @@ public final class Vector2D {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == this) return true;
-        if (obj == null || obj.getClass() != this.getClass()) return false;
-        var that = (Vector2D) obj;
-        return this.x == that.x() &&
-            this.y == that.y();
+        return obj instanceof Vector2D other &&
+            this.x == other.x() && this.y == other.y();
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(x, y);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("[%d, %d]", this.x, this.y);
     }
 }

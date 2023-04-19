@@ -1,9 +1,5 @@
 package de.hhn;
 
-import de.hhn.services.RuleChecker;
-
-import java.util.Optional;
-
 /**
  * Vermittelt zwischen Model (Board) und View (GameScreen).
  */
@@ -18,42 +14,25 @@ public class Controller {
         this.currentPlayer = CharacterKind.WHITE;
     }
 
-    private boolean gameLoop() {
-        this.view.draw(
-            this.model.fields,
-            this.model.characterB,
+    private void onMoveCallback(Move move) {
+        System.out.println(move);
+        this.updateModel(move);
+        this.checkKill(move.characterKind);
+        this.checkWinner();
+        this.view.draw(this.model.fields, this.model.characterB,
+            this.model.characterW,
+            this.currentPlayer = this.currentPlayer.getOpposite()
+        );
+        this.view.getNextMove(this::onMoveCallback);
+    }
+
+    public void start() {
+        this.view.draw(this.model.fields, this.model.characterB,
             this.model.characterW,
             this.currentPlayer = this.currentPlayer.getOpposite()
         );
 
-        while (true) {
-            Optional<Move> moveOpt = this.view.getNextMove();
-
-            if (moveOpt.isEmpty()) {
-                return true;
-            }
-
-            var move = moveOpt.get();
-
-            if (!RuleChecker.isValidMove(move, this.model.getCharacter(this.currentPlayer))) {
-                GameScreen.drawInvalidMove(move.characterKind);
-                continue;
-            }
-
-            this.updateModel(move);
-            this.checkKill(move.characterKind);
-            return this.checkWinner();
-        }
-    }
-
-    public void start() {
-        boolean running = true;
-
-        while (running) {
-            running = ! this.gameLoop();
-        }
-
-        System.out.println("Spiel beendet");
+        this.view.getNextMove(this::onMoveCallback);
     }
 
     private boolean checkWinner() {
@@ -70,14 +49,15 @@ public class Controller {
         return false;
     }
 
-    private void checkKill(CharacterKind maymeKiller) {
-        var killerCharacter = this.model.getCharacter(maymeKiller);
-        var targetCharacter = this.model.getCharacter(maymeKiller.getOpposite());
+    private void checkKill(CharacterKind maybeKiller) {
+        var killerCharacter = this.model.getCharacter(maybeKiller);
+        var targetCharacter = this.model.getCharacter(maybeKiller.getOpposite());
 
         if (killerCharacter.getPosition().equals(targetCharacter.getPosition())) {
             killerCharacter.incrementPoints(targetCharacter.getPoints());
             targetCharacter.resetPoints();
-            targetCharacter.teleport(this.model.getStartFieldFor(targetCharacter.getKind()));
+            targetCharacter.teleport(
+                this.model.getStartFieldFor(targetCharacter.getKind()));
         }
     }
 

@@ -13,4 +13,9 @@ public class Move {
         this.characterKind = characterKind;
         this.target = target;
     }
+
+    @Override
+    public String toString() {
+        return String.format("%s %s", this.characterKind, this.target);
+    }
 }

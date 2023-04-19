@@ -52,20 +52,20 @@ public class Character implements ReadOnlyCharacter {
     }
 
     public void move(Vector2D direction) {
-        if (direction.x() > 0) {
+        if (direction.x() == 1) {
             this.fieldNode.getEast()
                 .ifPresent(eastNode -> this.fieldNode = eastNode);
         }
-        else if (direction.x() < 0) {
+        else if (direction.x() == -1) {
             this.fieldNode.getWest()
                 .ifPresent(westNode -> this.fieldNode = westNode);
         }
 
-        if (direction.y() > 0) {
+        if (direction.y() == 1) {
             this.fieldNode.getSouth()
                 .ifPresent(southNode -> this.fieldNode = southNode);
         }
-        else if (direction.y() < 0) {
+        else if (direction.y() == -1) {
             this.fieldNode.getNorth()
                 .ifPresent(northNode -> this.fieldNode = northNode);
         }
