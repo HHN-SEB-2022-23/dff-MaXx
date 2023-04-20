@@ -2,15 +2,13 @@ package de.hhn;
 
 import de.hhn.lib.Vector2D;
 
-/**
- * Interface für den Character, für die Oberfläche, die am Character nichts ändern darf.
- */
+/** Interface für den Character, für die Oberfläche, die am Character nichts ändern darf. */
 public interface ReadOnlyCharacter {
-    Fraction getPoints();
+  Fraction getPoints();
 
-    Vector2D getPosition();
+  Vector2D getPosition();
 
-    String toString();
+  String toString();
 
-    CharacterKind getKind();
+  CharacterKind getKind();
 }
