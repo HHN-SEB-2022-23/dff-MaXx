@@ -249,7 +249,6 @@ public class GameScreen extends JFrame {
 
     @Override
     public void paintComponent(Graphics g) {
-      super.paintComponent(g);
       g.setColor(this.getBackground());
       g.fillRect(0, 0, this.getWidth(), this.getHeight());
       g.setColor(this.getForeground());
@@ -290,7 +289,6 @@ public class GameScreen extends JFrame {
 
     @Override
     public void paintComponent(Graphics g) {
-      super.paintComponent(g);
       g.setColor(this.getBackground());
       g.fillRect(0, 0, this.getWidth(), this.getHeight());
       g.setColor(this.getForeground());
