@@ -31,7 +31,7 @@ public class GameScreen extends JFrame {
   private final FractionLabel statusWhiteEl;
   private ReadOnlyCharacter currentChar;
 
-  public GameScreen(Controller controller) {
+  public GameScreen(ActionListener actionListener) {
     super("MaXx");
     this.setExtendedState(JFrame.MAXIMIZED_BOTH);
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -51,7 +51,7 @@ public class GameScreen extends JFrame {
         fieldEl.setForeground(GameScreen.whiteSmoke);
         fieldEl.setOpaque(false);
         fieldEl.setPreferredSize(fieldElSize);
-        fieldEl.addActionListener(controller);
+        fieldEl.addActionListener(actionListener);
         gridPanel.add(fieldEl);
         this.fields.put(fieldPos, fieldEl);
       }
