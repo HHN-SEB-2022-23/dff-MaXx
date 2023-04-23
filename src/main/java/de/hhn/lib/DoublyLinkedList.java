@@ -11,22 +11,23 @@ package de.hhn.lib;
  * befindet.
  */
 public class DoublyLinkedList<T> {
-  private final DoublyLinkedListNode<T> anchor;
+  public static <T> DoublyLinkedList<T> from(final T[][] matrix) {
+    if (matrix.length == 0) {
+      throw new IllegalArgumentException("Matrix must not be empty.");
+    }
 
-  public DoublyLinkedList(DoublyLinkedListNode<T> anchor) {
-    this.anchor = anchor;
-  }
+    final int m = matrix.length;
+    final int n = matrix[0].length;
 
-  protected DoublyLinkedList(T anchorValue) {
-    this.anchor = new DoublyLinkedListNode<>(anchorValue, true);
-    this.anchor.setNorth(null);
-    this.anchor.setSouth(null);
-    this.anchor.setEast(null);
-    this.anchor.setWest(null);
+    final DoublyLinkedListNode<T>[][] visited = new DoublyLinkedListNode[m][n];
+
+    final var anchor = DoublyLinkedList.constructFromMatrix(matrix, 0, 0, m, n, visited);
+
+    return new DoublyLinkedList<>(anchor);
   }
 
   protected static <U> DoublyLinkedListNode<U> constructFromMatrix(
-      U[][] arr, int i, int j, int m, int n, DoublyLinkedListNode<U>[][] visited) {
+      final U[][] arr, final int i, final int j, final int m, final int n, final DoublyLinkedListNode<U>[][] visited) {
     // abbruch, wenn i oder j außerhalb des Arrays liegt
     if (i > m - 1 || j > n - 1 || i < 0 || j < 0) {
       return null;
@@ -38,7 +39,7 @@ public class DoublyLinkedList<T> {
     }
 
     // Erstelle neue Node für i und j rekursiv umliegende Referenzen setzen
-    var temp = new DoublyLinkedListNode<U>(arr[i][j], i == 0 && j == 0);
+    final var temp = new DoublyLinkedListNode<U>(arr[i][j], i == 0 && j == 0);
     visited[i][j] = temp;
 
     temp.setEast(DoublyLinkedList.constructFromMatrix(arr, i, j + 1, m, n, visited))
@@ -56,22 +57,21 @@ public class DoublyLinkedList<T> {
     return temp;
   }
 
-  public static <T> DoublyLinkedList<T> from(T[][] matrix) {
-    if (matrix.length == 0) {
-      throw new IllegalArgumentException("Matrix must not be empty.");
-    }
+  private final DoublyLinkedListNode<T> anchor;
 
-    int m = matrix.length;
-    int n = matrix[0].length;
-
-    DoublyLinkedListNode<T>[][] visited = new DoublyLinkedListNode[m][n];
-
-    var anchor = DoublyLinkedList.constructFromMatrix(matrix, 0, 0, m, n, visited);
-
-    return new DoublyLinkedList<>(anchor);
+  public DoublyLinkedList(final DoublyLinkedListNode<T> anchor) {
+    this.anchor = anchor;
   }
 
-  public DoublyLinkedListNode<T> getAt(Vector2D position) {
+  protected DoublyLinkedList(final T anchorValue) {
+    this.anchor = new DoublyLinkedListNode<>(anchorValue, true);
+    this.anchor.setNorth(null);
+    this.anchor.setSouth(null);
+    this.anchor.setEast(null);
+    this.anchor.setWest(null);
+  }
+
+  public DoublyLinkedListNode<T> getAt(final Vector2D position) {
     var curr = this.anchor;
     for (int i = 0; i < position.x(); i++) {
       curr = curr.getEast().orElseThrow();

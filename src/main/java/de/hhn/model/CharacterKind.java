@@ -1,4 +1,4 @@
-package de.hhn;
+package de.hhn.model;
 
 /** Die möglichen Figurenarten. */
 public enum CharacterKind {
@@ -7,7 +7,7 @@ public enum CharacterKind {
 
   private final String displayName;
 
-  CharacterKind(String displayName) {
+  CharacterKind(final String displayName) {
     this.displayName = displayName;
   }
 

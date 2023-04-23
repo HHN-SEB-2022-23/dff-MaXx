@@ -1,4 +1,4 @@
-package de.hhn;
+package de.hhn.model;
 
 import de.hhn.lib.Vector2D;
 import de.hhn.services.RandomFractionService;
@@ -6,16 +6,16 @@ import de.hhn.services.RandomFractionService;
 /**
  * Die Daten eines Feldes auf dem Spielbrett.
  *
- * <p>Verwaltet nur die darin enthaltene Fraction.
+ * <p>
+ * Verwaltet nur die darin enthaltene Fraction.
  */
 public class Field implements ReadOnlyField {
 
-  private static final RandomFractionService rfs = new RandomFractionService();
-  private Fraction value;
   public final Vector2D position;
+  private Fraction value;
 
-  public Field(Vector2D position) {
-    this.value = Field.rfs.nextFraction();
+  public Field(final Vector2D position) {
+    this.value = RandomFractionService.nextFraction();
     this.position = position;
   }
 
@@ -26,6 +26,11 @@ public class Field implements ReadOnlyField {
     }
 
     return this.value.toString();
+  }
+
+  @Override
+  public Vector2D getPosition() {
+    return this.position;
   }
 
   public Fraction getValue() {

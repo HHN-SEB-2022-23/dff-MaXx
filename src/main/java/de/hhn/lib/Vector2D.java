@@ -8,16 +8,16 @@ public final class Vector2D {
   private final int y;
 
   /** */
-  public Vector2D(int x, int y) {
+  public Vector2D(final int x, final int y) {
     this.x = x;
     this.y = y;
   }
 
-  public Vector2D add(Vector2D other) {
+  public Vector2D add(final Vector2D other) {
     return new Vector2D(this.x + other.x(), this.y + other.y());
   }
 
-  public Vector2D relativeTo(Vector2D other) {
+  public Vector2D relativeTo(final Vector2D other) {
     return new Vector2D(this.x - other.x(), this.y - other.y());
   }
 
@@ -30,13 +30,13 @@ public final class Vector2D {
   }
 
   @Override
-  public boolean equals(Object obj) {
-    return obj instanceof Vector2D other && this.x == other.x() && this.y == other.y();
+  public boolean equals(final Object obj) {
+    return obj instanceof final Vector2D other && this.x == other.x() && this.y == other.y();
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(x, y);
+    return Objects.hash(this.x, this.y);
   }
 
   @Override

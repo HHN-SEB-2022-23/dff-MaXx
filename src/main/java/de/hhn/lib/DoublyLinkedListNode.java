@@ -11,7 +11,7 @@ public class DoublyLinkedListNode<T> {
   protected DoublyLinkedListNode<T> east;
   protected DoublyLinkedListNode<T> west;
 
-  public DoublyLinkedListNode(T data, boolean isAnchor) {
+  public DoublyLinkedListNode(final T data, final boolean isAnchor) {
     this.data = data;
     this.isAnchor = isAnchor;
   }
@@ -24,7 +24,7 @@ public class DoublyLinkedListNode<T> {
     return Optional.ofNullable(this.north);
   }
 
-  public Optional<DoublyLinkedListNode<T>> setNorth(DoublyLinkedListNode<T> north) {
+  public Optional<DoublyLinkedListNode<T>> setNorth(final DoublyLinkedListNode<T> north) {
     return Optional.ofNullable(this.north = north);
   }
 
@@ -32,7 +32,7 @@ public class DoublyLinkedListNode<T> {
     return Optional.ofNullable(this.south);
   }
 
-  public Optional<DoublyLinkedListNode<T>> setSouth(DoublyLinkedListNode<T> south) {
+  public Optional<DoublyLinkedListNode<T>> setSouth(final DoublyLinkedListNode<T> south) {
     return Optional.ofNullable(this.south = south);
   }
 
@@ -40,7 +40,7 @@ public class DoublyLinkedListNode<T> {
     return Optional.ofNullable(this.east);
   }
 
-  public Optional<DoublyLinkedListNode<T>> setEast(DoublyLinkedListNode<T> east) {
+  public Optional<DoublyLinkedListNode<T>> setEast(final DoublyLinkedListNode<T> east) {
     return Optional.ofNullable(this.east = east);
   }
 
@@ -48,7 +48,7 @@ public class DoublyLinkedListNode<T> {
     return Optional.ofNullable(this.west);
   }
 
-  public Optional<DoublyLinkedListNode<T>> setWest(DoublyLinkedListNode<T> west) {
+  public Optional<DoublyLinkedListNode<T>> setWest(final DoublyLinkedListNode<T> west) {
     return Optional.ofNullable(this.west = west);
   }
 }

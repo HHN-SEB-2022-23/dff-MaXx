@@ -1,8 +1,9 @@
 package de.hhn;
 
+import de.hhn.controller.Controller;
 import javax.swing.*;
 
-/** Startet den Controller. */
+/** Startet den controller. */
 public class MaXx {
   public static void main(String[] args) {
     try {

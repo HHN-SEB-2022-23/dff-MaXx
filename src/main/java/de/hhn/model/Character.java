@@ -1,4 +1,4 @@
-package de.hhn;
+package de.hhn.model;
 
 import de.hhn.lib.DoublyLinkedListNode;
 import de.hhn.lib.Vector2D;
@@ -6,10 +6,11 @@ import de.hhn.lib.Vector2D;
 /** Hält Daten, die den einzelnen Spieler betreffen. */
 public class Character implements ReadOnlyCharacter {
   private final CharacterKind kind;
-  private DoublyLinkedListNode<Field> fieldNode;
+  private DoublyLinkedListNode<? extends Field> fieldNode;
   private Fraction points;
 
-  public Character(CharacterKind kind, DoublyLinkedListNode<Field> fieldNode) {
+  public Character(
+      final CharacterKind kind, final DoublyLinkedListNode<? extends Field> fieldNode) {
     this.points = Fraction.ZERO;
     this.kind = kind;
     this.fieldNode = fieldNode;
@@ -17,7 +18,7 @@ public class Character implements ReadOnlyCharacter {
     this.fieldNode.getData().setZero();
   }
 
-  public void incrementPoints(Fraction points) {
+  public void incrementPoints(final Fraction points) {
     this.points = this.points.add(points);
   }
 
@@ -35,7 +36,7 @@ public class Character implements ReadOnlyCharacter {
     return this.fieldNode.getData().position;
   }
 
-  public void teleport(DoublyLinkedListNode<Field> targetField) {
+  public void teleport(final DoublyLinkedListNode<? extends Field> targetField) {
     this.fieldNode = targetField;
   }
 
@@ -49,7 +50,7 @@ public class Character implements ReadOnlyCharacter {
     return this.kind;
   }
 
-  public void move(Vector2D direction) {
+  public void move(final Vector2D direction) {
     if (direction.x() == 1) {
       this.fieldNode.getEast().ifPresent(eastNode -> this.fieldNode = eastNode);
     } else if (direction.x() == -1) {
