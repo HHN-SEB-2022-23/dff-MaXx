@@ -3,10 +3,12 @@ package de.hhn;
 import javax.swing.*;
 
 /** Startet den Controller. */
-public class Main {
+public class MaXx {
   public static void main(String[] args) {
     try {
-      UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+      System.setProperty("apple.laf.useScreenMenuBar", "true");
+      System.setProperty("com.apple.mrj.application.apple.menu.about.name", "MaXx");
+      UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
     } catch (ClassNotFoundException
         | InstantiationException
         | IllegalAccessException

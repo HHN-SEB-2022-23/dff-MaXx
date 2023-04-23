@@ -15,14 +15,24 @@
     </properties>
 
     <build>
+        <finalName>MaXx</finalName>
         <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.0.0</version>
+                <configuration>
+                    <mainClass>de.hhn.MaXx</mainClass>
+                </configuration>
+            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>de.hhn.Main</mainClass>
+                            <mainClass>de.hhn.MaXx</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -41,7 +51,7 @@
                             <archive>
                                 <manifest>
                                     <mainClass>
-                                        de.hhn.Main
+                                        de.hhn.MaXx
                                     </mainClass>
                                 </manifest>
                             </archive>

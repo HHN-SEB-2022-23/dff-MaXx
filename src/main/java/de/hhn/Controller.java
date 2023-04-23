@@ -6,7 +6,7 @@ import javax.swing.*;
 
 /** Vermittelt zwischen Model (Board) und View (GameScreen). */
 public class Controller extends Thread implements ActionListener {
-  private static final Object lock = new Object();
+  private final Object lock = new Object();
   private final GameScreen view;
   private final Board model;
   private CharacterKind currentPlayer;
@@ -34,8 +34,8 @@ public class Controller extends Thread implements ActionListener {
 
       SwingUtilities.invokeLater(
           () -> {
-            synchronized (Controller.lock) {
-              Controller.lock.notify();
+            synchronized (this.lock) {
+              this.lock.notify();
             }
           });
     }
@@ -51,9 +51,9 @@ public class Controller extends Thread implements ActionListener {
           this.currentPlayer = this.currentPlayer.getOpposite());
 
       // Warte aus UI Eingabe (main thread)
-      synchronized (Controller.lock) {
+      synchronized (this.lock) {
         try {
-          Controller.lock.wait();
+          this.lock.wait();
         } catch (InterruptedException ignore) {
           System.err.println("Interrupted while waiting for user input.");
           System.exit(1);
@@ -63,7 +63,8 @@ public class Controller extends Thread implements ActionListener {
       this.updateModel(Controller.currentMove);
       this.checkKill(Controller.currentMove.characterKind);
       if (this.checkWinner()) {
-        System.exit(0);
+        this.view.dispose();
+        break;
       }
     }
   }

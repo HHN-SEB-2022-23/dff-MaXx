@@ -15,7 +15,8 @@ import javax.swing.border.Border;
 /**
  * Oberfläche für das Spiel.
  *
- * <p>Ausgabe und Eingabe über die Konsole.
+ * <p>
+ * Ausgabe und Eingabe über die Konsole.
  */
 public class GameScreen extends JFrame {
   protected static final Color deepPink = new Color(255, 20, 147);
@@ -23,8 +24,7 @@ public class GameScreen extends JFrame {
   protected static final Color fairlyLightGray = new Color(115, 100, 110);
   protected static final Color whiteSmoke = new Color(245, 245, 245);
   protected static final Font font = new Font("Arial", Font.PLAIN, 18);
-  protected static Border defaultBorder =
-      BorderFactory.createLineBorder(GameScreen.fairlyLightGray, 1);
+  protected static Border defaultBorder = BorderFactory.createLineBorder(GameScreen.fairlyLightGray, 1);
   protected static Border highlightBorder = BorderFactory.createLineBorder(GameScreen.deepPink, 2);
   protected final Map<Vector2D, GameField> fields = new HashMap<>(64);
   private final FractionLabel statusBlackEl;
@@ -33,8 +33,49 @@ public class GameScreen extends JFrame {
 
   public GameScreen(ActionListener actionListener) {
     super("MaXx");
+
+    // menu bar
+    JMenuBar menuBar = new MenuBar();
+    menuBar.setBackground(GameScreen.veryDarkGray);
+    { // save game
+      var saveGameMenu = new MenuBarMenu("Game");
+      var loadSaveGame = new JMenuItem("Load");
+      saveGameMenu.add(loadSaveGame);
+      menuBar.add(saveGameMenu);
+    }
+    { // about
+      var aboutMenu = new MenuBarMenu("About");
+      var ourTeam = new JMenuItem("Our team");
+      ourTeam.addActionListener(
+          e -> {
+            var contributors = Arrays.asList("Frank Mayer", "René Ott", "Antonia Friese", "Felix Marzioch");
+            Collections.shuffle(contributors);
+            MessageDialog.show("Credits", String.join(", ", contributors));
+          });
+      aboutMenu.add(ourTeam);
+      var manualBtn = new JMenuItem("Manual");
+      manualBtn.addActionListener(
+          e -> {
+            var manualTxt = """
+                MaXx is a board game for two players. The game is played on a 8x8 board.
+                The goal of the game is to have more stones on the board than the opponent.
+                The game ends when all fields are occupied or no more moves are possible.
+                The game starts with 2 stones of each player in the middle of the board.
+                The players take turns placing their stones on the board.
+                A stone can only be placed on a field that is adjacent to a stone of the opponent.
+                If a stone is placed on a field that is adjacent to a stone of the opponent,
+                all stones of the opponent that are in a straight line between the placed stone
+                and another stone of the player are turned over.
+                """;
+            MessageDialog.show("Manual", manualTxt);
+          });
+      aboutMenu.add(manualBtn);
+      menuBar.add(aboutMenu);
+    }
+    this.setJMenuBar(menuBar);
+
+    // Frame setup
     this.setExtendedState(JFrame.MAXIMIZED_BOTH);
-    this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     this.setBackground(GameScreen.veryDarkGray);
     var mainPanel = new JPanel();
     mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
@@ -60,24 +101,8 @@ public class GameScreen extends JFrame {
 
     var statusPanel = new JPanel();
     statusPanel.setOpaque(false);
-    statusPanel.setLayout(new GridLayout(2, 3));
+    statusPanel.setLayout(new GridLayout(2, 2));
     mainPanel.add(statusPanel);
-
-    statusPanel.add(
-        new SimpleButton(
-            "Manual",
-            e -> {
-              MessageDialog.show(
-                  "Manual",
-                  "<html><p>Bewege die Figuren per klick auf ein begehbares Feld.</p><p>Begehbare"
-                      + " Felder sind mit einer Umrandung gekennzeichnet.</p><p>Beide Figuren"
-                      + " können sich in die vier Himmeldrichtungen bewegen.</p><p>Die weiße Figur"
-                      + " kann sich auch nach Nord Osten bewegen,</p><p>die schwarze Figur nach"
-                      + " Nord Westen.</p><p>Schwarz beginnt.</p><p>Wenn ein Spieler das Feld eines"
-                      + " anderen Spielers betritt, wird dieser geschlagen,</p><p>der geschlagene"
-                      + " Spieler gibt seine Punkte an seinen Gegner ab und wird auf das Startfeld"
-                      + " gesetzt.</p></html>");
-            }));
 
     var statusBlackLabel = new JLabel("Black:");
     statusBlackLabel.setFont(GameScreen.font);
@@ -91,16 +116,6 @@ public class GameScreen extends JFrame {
     this.statusBlackEl.setBackground(GameScreen.veryDarkGray);
     this.statusBlackEl.setPreferredSize(fieldElSize);
     statusPanel.add(this.statusBlackEl);
-
-    statusPanel.add(
-        new SimpleButton(
-            "Credits",
-            e -> {
-              var contributors =
-                  Arrays.asList("Frank Mayer", "René Ott", "Antonia Friese", "Felix Marzioch");
-              Collections.shuffle(contributors);
-              MessageDialog.show("Credits", String.join(", ", contributors));
-            }));
 
     var statusWhiteLabel = new JLabel("White:");
     statusWhiteLabel.setFont(GameScreen.font);
@@ -168,10 +183,9 @@ public class GameScreen extends JFrame {
 
     var rowStartFld = fields.getAnchor();
 
-    var currentlyPossibleMoves =
-        RuleChecker.getAllMovesFor(characterKind).stream()
-            .map(delta -> this.currentChar.getPosition().add(delta))
-            .toArray();
+    var currentlyPossibleMoves = RuleChecker.getAllMovesFor(characterKind).stream()
+        .map(delta -> this.currentChar.getPosition().add(delta))
+        .toArray();
 
     // alle zeilen durchgehen
     while (rowStartFld != null) {
@@ -305,6 +319,11 @@ public class GameScreen extends JFrame {
 
   private static class MessageDialog extends JDialog {
     public MessageDialog(String title, String message) {
+      // if message contains newlines, split it up inti html paragraphs
+      if (message.contains("\n")) {
+        message = message.replace("\n", "</p><p>");
+        message = "<html><p>" + message + "</p></html>";
+      }
       this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
       this.setMinimumSize(new Dimension(300, 150));
       this.setBackground(GameScreen.veryDarkGray);
@@ -352,6 +371,39 @@ public class GameScreen extends JFrame {
       this.setRolloverEnabled(false);
       this.setFocusable(false);
       this.setBorderPainted(false);
+    }
+  }
+
+  public class MenuBar extends JMenuBar {
+    @Override
+    protected void paintComponent(Graphics g) {
+      Graphics2D g2d = (Graphics2D) g;
+      g2d.setColor(GameScreen.veryDarkGray);
+      g2d.fillRect(0, 0, getWidth(), getHeight());
+    }
+  }
+
+  public class MenuBarMenu extends JMenu {
+    public MenuBarMenu(String text) {
+      super(text);
+      this.setFont(GameScreen.font);
+      this.setForeground(GameScreen.whiteSmoke);
+      this.setBackground(GameScreen.veryDarkGray);
+      this.setOpaque(true);
+    }
+
+    @Override
+    public void paintComponent(Graphics g) {
+      Graphics2D g2d = (Graphics2D) g;
+      var fm = g2d.getFontMetrics();
+      var txt = this.getText();
+      var width = this.getWidth();
+      var height = this.getHeight();
+      var txtWidth = fm.stringWidth(txt);
+      g2d.setColor(GameScreen.veryDarkGray);
+      g2d.fillRect(0, 0, getWidth(), getHeight());
+      g2d.setColor(GameScreen.whiteSmoke);
+      g2d.drawString(txt, ((width - txtWidth) / 2), height - 5);
     }
   }
 }
