@@ -10,11 +10,12 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.math.BigInteger;
+import java.util.zip.DeflaterOutputStream;
+import java.util.zip.InflaterInputStream;
 
 public class SaveGameService {
 
-  private static final String SAVE_GAME_FILE = "./SaveGame.ser";
-  public static final Object lock = new Object();
+  private static final String SAVE_GAME_FILE = "./MaXx_SaveGame";
 
   private static class SaveGameData implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -26,102 +27,98 @@ public class SaveGameService {
     boolean currentPlayerIsBlack;
 
     public SaveGameData(final Controller controller) {
-      synchronized (SaveGameService.lock) {
-        final var board = controller.getBoard();
+      final var board = controller.getBoard();
 
-        // game field
-        var rowStartFld = board.fields.getAnchor();
-        var fld = rowStartFld;
-        for (int i = 0; i < 64; i++) {
-          final var frac = fld.getData().getValue();
-          gameField[i][0] = frac.getNumerator().toString(NUMBER_RADIX);
-          gameField[i][1] = frac.getDenominator().toString(NUMBER_RADIX);
-          var fldEast = fld.getEast();
-          if (fldEast.isPresent()) {
-            fld = fldEast.get();
+      // game field
+      var rowStartFld = board.fields.getAnchor();
+      var fld = rowStartFld;
+      for (int i = 0; i < 64; i++) {
+        final var frac = fld.getData().getValue();
+        gameField[i][0] = frac.getNumerator().toString(NUMBER_RADIX);
+        gameField[i][1] = frac.getDenominator().toString(NUMBER_RADIX);
+        var fldEast = fld.getEast();
+        if (fldEast.isPresent()) {
+          fld = fldEast.get();
+        } else {
+          var fldSouth = rowStartFld.getSouth();
+          if (fldSouth.isPresent()) {
+            fld = fldSouth.get();
+            rowStartFld = fld;
           } else {
-            var fldSouth = rowStartFld.getSouth();
-            if (fldSouth.isPresent()) {
-              fld = fldSouth.get();
-              rowStartFld = fld;
-            } else {
-              break;
-            }
+            break;
           }
         }
-
-        // player positions
-        final var posB = board.characterB.getPosition();
-        final var posW = board.characterW.getPosition();
-        this.playerPos[0][0] = posB.x();
-        this.playerPos[0][1] = posB.y();
-        this.playerPos[1][0] = posW.x();
-        this.playerPos[1][1] = posW.y();
-
-        // player points
-        final var pointsB = board.characterB.getPoints();
-        final var pointsW = board.characterW.getPoints();
-        this.playerPoints[0][0] = pointsB.getNumerator().toString(NUMBER_RADIX);
-        this.playerPoints[0][1] = pointsB.getDenominator().toString(NUMBER_RADIX);
-        this.playerPoints[1][0] = pointsW.getNumerator().toString(NUMBER_RADIX);
-        this.playerPoints[1][1] = pointsW.getDenominator().toString(NUMBER_RADIX);
-
-        // current player
-        this.currentPlayerIsBlack = controller.getCurrentPlayer() == CharacterKind.BLACK;
       }
+
+      // player positions
+      final var posB = board.characterB.getPosition();
+      final var posW = board.characterW.getPosition();
+      this.playerPos[0][0] = posB.x();
+      this.playerPos[0][1] = posB.y();
+      this.playerPos[1][0] = posW.x();
+      this.playerPos[1][1] = posW.y();
+
+      // player points
+      final var pointsB = board.characterB.getPoints();
+      final var pointsW = board.characterW.getPoints();
+      this.playerPoints[0][0] = pointsB.getNumerator().toString(NUMBER_RADIX);
+      this.playerPoints[0][1] = pointsB.getDenominator().toString(NUMBER_RADIX);
+      this.playerPoints[1][0] = pointsW.getNumerator().toString(NUMBER_RADIX);
+      this.playerPoints[1][1] = pointsW.getDenominator().toString(NUMBER_RADIX);
+
+      // current player
+      this.currentPlayerIsBlack = controller.getCurrentPlayer() == CharacterKind.BLACK;
     }
 
     public void loadInto(final Controller controller) {
-      synchronized (SaveGameService.lock) {
-        final var board = controller.getBoard();
+      final var board = controller.getBoard();
 
-        // game field
-        var rowStartFld = board.fields.getAnchor();
-        var fld = rowStartFld;
-        for (int i = 0; i < 64; i++) {
-          final var frac =
-              new Fraction(
-                  new BigInteger(gameField[i][0], SaveGameData.NUMBER_RADIX),
-                  new BigInteger(gameField[i][1], SaveGameData.NUMBER_RADIX));
-          fld.getData().setValue(frac);
-          var fldEast = fld.getEast();
-          if (fldEast.isPresent()) {
-            fld = fldEast.get();
+      // game field
+      var rowStartFld = board.fields.getAnchor();
+      var fld = rowStartFld;
+      for (int i = 0; i < 64; i++) {
+        final var frac =
+            new Fraction(
+                new BigInteger(gameField[i][0], SaveGameData.NUMBER_RADIX),
+                new BigInteger(gameField[i][1], SaveGameData.NUMBER_RADIX));
+        fld.getData().setValue(frac);
+        var fldEast = fld.getEast();
+        if (fldEast.isPresent()) {
+          fld = fldEast.get();
+        } else {
+          var fldSouth = rowStartFld.getSouth();
+          if (fldSouth.isPresent()) {
+            fld = fldSouth.get();
+            rowStartFld = fld;
           } else {
-            var fldSouth = rowStartFld.getSouth();
-            if (fldSouth.isPresent()) {
-              fld = fldSouth.get();
-              rowStartFld = fld;
-            } else {
-              break;
-            }
+            break;
           }
         }
-
-        // player positions
-        final var posB = new Vector2D(this.playerPos[0][0], this.playerPos[0][1]);
-        final var posW = new Vector2D(this.playerPos[1][0], this.playerPos[1][1]);
-        board.characterB.teleport(posB);
-        board.characterW.teleport(posW);
-
-        // player points
-        final var pointsB =
-            new Fraction(
-                new BigInteger(this.playerPoints[0][0], SaveGameData.NUMBER_RADIX),
-                new BigInteger(this.playerPoints[0][1], SaveGameData.NUMBER_RADIX));
-        final var pointsW =
-            new Fraction(
-                new BigInteger(this.playerPoints[1][0], SaveGameData.NUMBER_RADIX),
-                new BigInteger(this.playerPoints[1][1], SaveGameData.NUMBER_RADIX));
-        board.characterB.resetPoints();
-        board.characterB.incrementPoints(pointsB);
-        board.characterW.resetPoints();
-        board.characterW.incrementPoints(pointsW);
-
-        // current player
-        controller.setCurrentPlayer(
-            this.currentPlayerIsBlack ? CharacterKind.BLACK : CharacterKind.WHITE);
       }
+
+      // player positions
+      final var posB = new Vector2D(this.playerPos[0][0], this.playerPos[0][1]);
+      final var posW = new Vector2D(this.playerPos[1][0], this.playerPos[1][1]);
+      board.characterB.teleport(posB);
+      board.characterW.teleport(posW);
+
+      // player points
+      final var pointsB =
+          new Fraction(
+              new BigInteger(this.playerPoints[0][0], SaveGameData.NUMBER_RADIX),
+              new BigInteger(this.playerPoints[0][1], SaveGameData.NUMBER_RADIX));
+      final var pointsW =
+          new Fraction(
+              new BigInteger(this.playerPoints[1][0], SaveGameData.NUMBER_RADIX),
+              new BigInteger(this.playerPoints[1][1], SaveGameData.NUMBER_RADIX));
+      board.characterB.resetPoints();
+      board.characterB.incrementPoints(pointsB);
+      board.characterW.resetPoints();
+      board.characterW.incrementPoints(pointsW);
+
+      // current player
+      controller.setCurrentPlayer(
+          this.currentPlayerIsBlack ? CharacterKind.BLACK : CharacterKind.WHITE);
     }
   }
 
@@ -129,7 +126,8 @@ public class SaveGameService {
     try {
       final var data = new SaveGameData(controller);
       final var out = new FileOutputStream(SaveGameService.SAVE_GAME_FILE);
-      final var oos = new ObjectOutputStream(out);
+      final var zip = new DeflaterOutputStream(out);
+      final var oos = new ObjectOutputStream(zip);
       oos.writeObject(data);
       oos.flush();
       oos.close();
@@ -142,7 +140,8 @@ public class SaveGameService {
   public static void load(final Controller controller) {
     try {
       final var fileIn = new FileInputStream(SaveGameService.SAVE_GAME_FILE);
-      final var ois = new ObjectInputStream(fileIn);
+      final var zipIn = new InflaterInputStream(fileIn);
+      final var ois = new ObjectInputStream(zipIn);
       final var data = (SaveGameData) ois.readObject();
       ois.close();
       fileIn.close();
