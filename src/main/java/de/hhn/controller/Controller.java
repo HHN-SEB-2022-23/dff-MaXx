@@ -4,6 +4,7 @@ import de.hhn.model.Board;
 import de.hhn.model.CharacterKind;
 import de.hhn.model.Fraction;
 import de.hhn.model.Move;
+import de.hhn.services.SaveGameService;
 import de.hhn.view.ActionListeners;
 import de.hhn.view.GameField;
 import de.hhn.view.GameScreen;
@@ -14,6 +15,8 @@ import javax.swing.SwingUtilities;
 
 /** Vermittelt zwischen Model (Board) und View (GameScreen). */
 public class Controller extends Thread implements ActionListener {
+
+  private final boolean load;
   private final Object lock = new Object();
   private final GameScreen view;
   private final Board model;
@@ -22,7 +25,7 @@ public class Controller extends Thread implements ActionListener {
   private boolean running = true;
   private CharacterKind currentPlayer;
 
-  public Controller() {
+  public Controller(final boolean shouldLoadSaveGame) {
     final var wa =
         new WindowAdapter() {
           @Override
@@ -33,6 +36,7 @@ public class Controller extends Thread implements ActionListener {
     this.model = new Board();
     this.view = new GameScreen(this, wa, new ActionListeners(this));
     this.currentPlayer = CharacterKind.WHITE;
+    this.load = shouldLoadSaveGame;
   }
 
   public void dispose() {
@@ -68,6 +72,10 @@ public class Controller extends Thread implements ActionListener {
 
   @Override
   public void run() {
+    if (this.load) {
+      SaveGameService.load(this);
+    }
+
     while (this.running) {
       this.view.draw(
           this.model.fields,
@@ -143,7 +151,7 @@ public class Controller extends Thread implements ActionListener {
     this.currentPlayer = currentPlayer;
   }
 
-public GameScreen getGameScreen() {
+  public GameScreen getGameScreen() {
     return this.view;
-}
+  }
 }

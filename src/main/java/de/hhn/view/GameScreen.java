@@ -36,8 +36,6 @@ public class GameScreen extends JFrame {
 
     // Frame setup
     this.addWindowListener(windowAdapter);
-    this.setLocationRelativeTo(null);
-    this.setExtendedState(JFrame.MAXIMIZED_BOTH);
     this.setBackground(Theme.background);
     final var mainPanel = new JPanel();
     mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
@@ -96,6 +94,7 @@ public class GameScreen extends JFrame {
 
     this.pack();
     this.setVisible(true);
+    this.requestFocus();
   }
 
   public static void drawWinner(final Character characterB) {

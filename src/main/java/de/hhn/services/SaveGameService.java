@@ -4,6 +4,7 @@ import de.hhn.controller.Controller;
 import de.hhn.lib.Vector2D;
 import de.hhn.model.CharacterKind;
 import de.hhn.model.Fraction;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
@@ -14,8 +15,6 @@ import java.util.zip.DeflaterOutputStream;
 import java.util.zip.InflaterInputStream;
 
 public class SaveGameService {
-
-  private static final String SAVE_GAME_FILE = "./MaXx_SaveGame";
 
   private static class SaveGameData implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -36,11 +35,11 @@ public class SaveGameService {
         final var frac = fld.getData().getValue();
         gameField[i][0] = frac.getNumerator().toString(NUMBER_RADIX);
         gameField[i][1] = frac.getDenominator().toString(NUMBER_RADIX);
-        var fldEast = fld.getEast();
+        final var fldEast = fld.getEast();
         if (fldEast.isPresent()) {
           fld = fldEast.get();
         } else {
-          var fldSouth = rowStartFld.getSouth();
+          final var fldSouth = rowStartFld.getSouth();
           if (fldSouth.isPresent()) {
             fld = fldSouth.get();
             rowStartFld = fld;
@@ -82,11 +81,11 @@ public class SaveGameService {
                 new BigInteger(gameField[i][0], SaveGameData.NUMBER_RADIX),
                 new BigInteger(gameField[i][1], SaveGameData.NUMBER_RADIX));
         fld.getData().setValue(frac);
-        var fldEast = fld.getEast();
+        final var fldEast = fld.getEast();
         if (fldEast.isPresent()) {
           fld = fldEast.get();
         } else {
-          var fldSouth = rowStartFld.getSouth();
+          final var fldSouth = rowStartFld.getSouth();
           if (fldSouth.isPresent()) {
             fld = fldSouth.get();
             rowStartFld = fld;
@@ -122,6 +121,8 @@ public class SaveGameService {
     }
   }
 
+  private static final String SAVE_GAME_FILE = "./MaXx_SaveGame";
+
   public static void save(final Controller controller) {
     try {
       final var data = new SaveGameData(controller);
@@ -138,8 +139,14 @@ public class SaveGameService {
   }
 
   public static void load(final Controller controller) {
+    final var f = new File(SaveGameService.SAVE_GAME_FILE);
+    if (!f.exists() || f.isDirectory()) {
+      System.err.println("No save game file found.");
+      return;
+    }
+
     try {
-      final var fileIn = new FileInputStream(SaveGameService.SAVE_GAME_FILE);
+      final var fileIn = new FileInputStream(f);
       final var zipIn = new InflaterInputStream(fileIn);
       final var ois = new ObjectInputStream(zipIn);
       final var data = (SaveGameData) ois.readObject();

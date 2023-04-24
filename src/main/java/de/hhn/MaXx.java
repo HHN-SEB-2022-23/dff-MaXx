@@ -1,6 +1,6 @@
 package de.hhn;
 
-import de.hhn.controller.Controller;
+import de.hhn.view.MainMenu;
 import javax.swing.*;
 
 /** Startet den controller. */
@@ -17,7 +17,6 @@ public class MaXx {
       // dann halt nicht 😒
     }
 
-    var controller = new Controller();
-    controller.start();
+    new MainMenu();
   }
 }
