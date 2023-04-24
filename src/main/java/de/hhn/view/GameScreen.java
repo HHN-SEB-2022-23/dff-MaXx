@@ -16,8 +16,7 @@ import javax.swing.*;
 /**
  * Oberfläche für das Spiel.
  *
- * <p>
- * Ausgabe und Eingabe über die Konsole.
+ * <p>Ausgabe und Eingabe über die Konsole.
  */
 public class GameScreen extends JFrame {
 
@@ -26,14 +25,18 @@ public class GameScreen extends JFrame {
   private final FractionLabel statusWhiteEl;
   private ReadOnlyCharacter currentChar;
 
-  public GameScreen(final ActionListener actionListener, final WindowAdapter windowAdapter) {
+  public GameScreen(
+      final ActionListener fieldClickListener,
+      final WindowAdapter windowAdapter,
+      final ActionListeners al) {
     super("MaXx");
 
     // menu bar
-    this.setJMenuBar(new MenuBar());
+    this.setJMenuBar(new MenuBar(al));
 
     // Frame setup
     this.addWindowListener(windowAdapter);
+    this.setLocationRelativeTo(null);
     this.setExtendedState(JFrame.MAXIMIZED_BOTH);
     this.setBackground(Theme.background);
     final var mainPanel = new JPanel();
@@ -51,7 +54,7 @@ public class GameScreen extends JFrame {
         fieldEl.setForeground(Theme.foreground);
         fieldEl.setOpaque(false);
         fieldEl.setPreferredSize(fieldElSize);
-        fieldEl.addActionListener(actionListener);
+        fieldEl.addActionListener(fieldClickListener);
         gridPanel.add(fieldEl);
         this.fields.put(fieldPos, fieldEl);
       }
@@ -92,7 +95,6 @@ public class GameScreen extends JFrame {
     this.add(mainPanel);
 
     this.pack();
-    this.setLocationRelativeTo(null);
     this.setVisible(true);
   }
 
@@ -146,22 +148,23 @@ public class GameScreen extends JFrame {
 
     var rowStartFld = fields.getAnchor();
 
-    final var currentlyPossibleMoves = RuleChecker.getAllMovesFor(characterKind).stream()
-        .map(delta -> this.currentChar.getPosition().add(delta))
-        .toArray();
+    final var currentlyPossibleMoves =
+        RuleChecker.getAllMovesFor(characterKind).stream()
+            .map(delta -> this.currentChar.getPosition().add(delta))
+            .toArray();
 
     // alle zeilen durchgehen
     while (rowStartFld != null) {
       // alle felder der zeile durchgehen
       var currentFld = rowStartFld;
-      while (true) {
+      while (currentFld != null) {
         // feld ausgeben
         final var data = currentFld.getData();
-        final var fieldEl = this.fields.get(data.getPosition());
+        final var pos = data.getPosition();
+        final var fieldEl = this.fields.get(pos);
         var backgroundColor = Theme.background;
         var border = Theme.secondaryBorder;
         var textColor = Theme.foreground;
-        final var pos = data.getPosition();
         if (pos == characterB.getPosition()) {
           fieldEl.setText(characterB.toString());
           if (characterKind == CharacterKind.BLACK) {

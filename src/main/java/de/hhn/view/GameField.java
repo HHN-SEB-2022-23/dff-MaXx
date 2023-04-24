@@ -8,7 +8,6 @@ import javax.swing.*;
 public class GameField extends JButton {
 
   private final Vector2D position;
-  private boolean isFraction = false;
   private Fraction fraction = null;
 
   public GameField(final Vector2D position) {
@@ -27,7 +26,7 @@ public class GameField extends JButton {
     g.setColor(this.getForeground());
 
     final var fm = g.getFontMetrics();
-    if (this.isFraction) {
+    if (this.fraction != null) {
       if (this.fraction.equals(Fraction.ZERO)) {
         return;
       }
@@ -42,13 +41,13 @@ public class GameField extends JButton {
   }
 
   public void setFraction(final Fraction value) {
-    this.isFraction = true;
     this.fraction = value;
+    super.setText(value.toString());
   }
 
   @Override
   public void setText(final String text) {
-    this.isFraction = false;
+    this.fraction = null;
     super.setText(text);
   }
 }

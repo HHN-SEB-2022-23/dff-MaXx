@@ -4,6 +4,7 @@ import de.hhn.model.Board;
 import de.hhn.model.CharacterKind;
 import de.hhn.model.Fraction;
 import de.hhn.model.Move;
+import de.hhn.view.ActionListeners;
 import de.hhn.view.GameField;
 import de.hhn.view.GameScreen;
 import java.awt.event.ActionEvent;
@@ -22,14 +23,15 @@ public class Controller extends Thread implements ActionListener {
   private CharacterKind currentPlayer;
 
   public Controller() {
-    final var wa = new WindowAdapter() {
-      @Override
-      public void windowClosing(final java.awt.event.WindowEvent e) {
-        Controller.this.dispose();
-      }
-    };
-    this.view = new GameScreen(this, wa);
+    final var wa =
+        new WindowAdapter() {
+          @Override
+          public void windowClosing(final java.awt.event.WindowEvent e) {
+            Controller.this.dispose();
+          }
+        };
     this.model = new Board();
+    this.view = new GameScreen(this, wa, new ActionListeners(this));
     this.currentPlayer = CharacterKind.WHITE;
   }
 
@@ -50,9 +52,10 @@ public class Controller extends Thread implements ActionListener {
       }
 
       final var pos = fieldEl.getPosition();
-      this.currentMove = new Move(
-          this.currentPlayer,
-          pos.relativeTo(this.model.getCharacter(this.currentPlayer).getPosition()));
+      this.currentMove =
+          new Move(
+              this.currentPlayer,
+              pos.relativeTo(this.model.getCharacter(this.currentPlayer).getPosition()));
 
       SwingUtilities.invokeLater(
           () -> {
@@ -127,4 +130,20 @@ public class Controller extends Thread implements ActionListener {
 
     character.move(move.target);
   }
+
+  public Board getBoard() {
+    return this.model;
+  }
+
+  public CharacterKind getCurrentPlayer() {
+    return this.currentPlayer;
+  }
+
+  public void setCurrentPlayer(CharacterKind currentPlayer) {
+    this.currentPlayer = currentPlayer;
+  }
+
+public GameScreen getGameScreen() {
+    return this.view;
+}
 }

@@ -4,17 +4,21 @@ import java.awt.*;
 import javax.swing.*;
 
 public class MenuBar extends JMenuBar {
-  public MenuBar() {
+  public MenuBar(final ActionListeners al) {
     final var saveGameMenu = new MenuBarMenu("Game");
     final var loadSaveGame = new JMenuItem("Load");
+    loadSaveGame.addActionListener(al::loadGame);
     saveGameMenu.add(loadSaveGame);
     this.add(saveGameMenu);
+    final var saveSaveGame = new JMenuItem("Save");
+    saveSaveGame.addActionListener(al::saveGame);
+    saveGameMenu.add(saveSaveGame);
     final var aboutMenu = new MenuBarMenu("About");
     final var ourTeam = new JMenuItem("Our team");
-    ourTeam.addActionListener(ActionListeners::ourTeam);
+    ourTeam.addActionListener(al::ourTeam);
     aboutMenu.add(ourTeam);
     final var manualBtn = new JMenuItem("Manual");
-    manualBtn.addActionListener(ActionListeners::manual);
+    manualBtn.addActionListener(al::manual);
     aboutMenu.add(manualBtn);
     this.add(aboutMenu);
   }

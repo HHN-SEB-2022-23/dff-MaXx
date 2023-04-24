@@ -36,8 +36,50 @@ public class Character implements ReadOnlyCharacter {
     return this.fieldNode.getData().position;
   }
 
+  public void setPosition(Vector2D pos) {
+    this.fieldNode.getData().position = pos;
+  }
+
   public void teleport(final DoublyLinkedListNode<? extends Field> targetField) {
     this.fieldNode = targetField;
+  }
+
+  public void teleport(final Vector2D targetPosition) {
+    while(this.getPosition().x() < targetPosition.x()) {
+      var eastNode = this.fieldNode.getEast();
+      if (eastNode.isPresent()) {
+        this.fieldNode = eastNode.get();
+      } else {
+        break;
+      }
+    }
+
+    while(this.getPosition().x() > targetPosition.x()) {
+      var westNode = this.fieldNode.getWest();
+      if (westNode.isPresent()) {
+        this.fieldNode = westNode.get();
+      } else {
+        break;
+      }
+    }
+
+    while(this.getPosition().y() < targetPosition.y()) {
+      var southNode = this.fieldNode.getSouth();
+      if (southNode.isPresent()) {
+        this.fieldNode = southNode.get();
+      } else {
+        break;
+      }
+    }
+
+    while(this.getPosition().y() > targetPosition.y()) {
+      var northNode = this.fieldNode.getNorth();
+      if (northNode.isPresent()) {
+        this.fieldNode = northNode.get();
+      } else {
+        break;
+      }
+    }
   }
 
   @Override
@@ -65,5 +107,9 @@ public class Character implements ReadOnlyCharacter {
 
     this.incrementPoints(this.fieldNode.getData().getValue());
     this.fieldNode.getData().setZero();
+  }
+
+  public void setPoints(final Fraction points) {
+    this.points = points;
   }
 }

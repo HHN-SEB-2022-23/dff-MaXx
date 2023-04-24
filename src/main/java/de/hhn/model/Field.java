@@ -6,12 +6,11 @@ import de.hhn.services.RandomFractionService;
 /**
  * Die Daten eines Feldes auf dem Spielbrett.
  *
- * <p>
- * Verwaltet nur die darin enthaltene Fraction.
+ * <p>Verwaltet nur die darin enthaltene Fraction.
  */
 public class Field implements ReadOnlyField {
 
-  public final Vector2D position;
+  public Vector2D position;
   private Fraction value;
 
   public Field(final Vector2D position) {
@@ -35,6 +34,10 @@ public class Field implements ReadOnlyField {
 
   public Fraction getValue() {
     return this.value;
+  }
+
+  public void setValue(final Fraction frac) {
+    this.value = frac;
   }
 
   public void setZero() {
