@@ -3,6 +3,7 @@ package de.hhn.view;
 import java.awt.*;
 import javax.swing.*;
 
+/** menu bar for a game instance */
 public class MenuBar extends JMenuBar {
   public MenuBar(final ActionListeners al) {
     final var saveGameMenu = new MenuBarMenu("Game");

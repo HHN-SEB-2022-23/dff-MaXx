@@ -5,6 +5,10 @@ import de.hhn.model.Fraction;
 import java.awt.*;
 import javax.swing.*;
 
+/**
+ * a field on the game board
+ * knows on what position it is
+ */
 public class GameField extends JButton {
 
   private final Vector2D position;

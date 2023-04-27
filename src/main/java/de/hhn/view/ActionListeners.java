@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.util.Arrays;
 import java.util.Collections;
 
+/** ActionListeners for the buttons in the UI. */
 public class ActionListeners {
   private final Controller controller;
 

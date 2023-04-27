@@ -3,7 +3,8 @@ package de.hhn.view;
 import java.awt.*;
 import javax.swing.*;
 
-class MessageDialog extends JDialog {
+/** simple dialog for displaying a modal message box */
+public class MessageDialog extends JDialog {
 
   public MessageDialog(final String title, String message) {
     // if message contains newlines, split it up inti html paragraphs

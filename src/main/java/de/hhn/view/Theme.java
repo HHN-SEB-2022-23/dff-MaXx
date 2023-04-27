@@ -4,6 +4,7 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.Border;
 
+/** style of the UI */
 public class Theme {
 
   public static final Color accent = new Color(255, 20, 147);

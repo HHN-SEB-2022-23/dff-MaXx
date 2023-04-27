@@ -39,6 +39,7 @@ public class Controller extends Thread implements ActionListener {
     this.load = shouldLoadSaveGame;
   }
 
+  // clean up resources
   public void dispose() {
     this.view.dispose();
     this.running = false;
@@ -48,6 +49,7 @@ public class Controller extends Thread implements ActionListener {
     }
   }
 
+  // Button click from UI
   @Override
   public void actionPerformed(final ActionEvent e) {
     if (e.getSource() instanceof final GameField fieldEl) {
@@ -70,6 +72,7 @@ public class Controller extends Thread implements ActionListener {
     }
   }
 
+  // start the game loop
   @Override
   public void run() {
     if (this.load) {
@@ -112,6 +115,7 @@ public class Controller extends Thread implements ActionListener {
     }
   }
 
+  // check if a player has won
   private boolean checkWinner() {
     if (this.model.characterB.getPoints().compareTo(Fraction.FIFTY_THREE) > 0) {
       GameScreen.drawWinner(this.model.characterB);
@@ -126,6 +130,7 @@ public class Controller extends Thread implements ActionListener {
     return false;
   }
 
+  // check if a player has killed another player
   private void checkKill(final CharacterKind maybeKiller) {
     final var killerCharacter = this.model.getCharacter(maybeKiller);
     final var targetCharacter = this.model.getCharacter(maybeKiller.getOpposite());
@@ -137,6 +142,7 @@ public class Controller extends Thread implements ActionListener {
     }
   }
 
+  // update the model based on a move
   private void updateModel(final Move move) {
     final var character = this.model.getCharacter(move.characterKind);
 

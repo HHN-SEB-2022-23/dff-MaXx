@@ -11,6 +11,10 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+/**
+ * main game menu
+ * starts the game instances
+ */
 public class MainMenu extends JFrame {
 
   private final List<Controller> controllers = new LinkedList<>();

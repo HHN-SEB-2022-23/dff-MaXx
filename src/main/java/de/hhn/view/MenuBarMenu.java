@@ -3,6 +3,7 @@ package de.hhn.view;
 import java.awt.*;
 import javax.swing.*;
 
+/** menu entry for the menu bar */
 public class MenuBarMenu extends JMenu {
 
   public MenuBarMenu(final String s) {

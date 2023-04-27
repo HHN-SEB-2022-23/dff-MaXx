@@ -4,6 +4,7 @@ import de.hhn.model.Fraction;
 import java.awt.*;
 import javax.swing.*;
 
+/** Special JLabel for displaying fractions */
 class FractionLabel extends JLabel {
 
   private Fraction fraction;

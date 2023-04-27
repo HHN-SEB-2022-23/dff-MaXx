@@ -4,6 +4,7 @@ import de.hhn.controller.Controller;
 import de.hhn.lib.Vector2D;
 import de.hhn.model.CharacterKind;
 import de.hhn.model.Fraction;
+import de.hhn.view.MessageDialog;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
@@ -16,6 +17,7 @@ import javax.swing.*;
 
 public class SaveGameService {
 
+  // structure of the save game
   private static class SaveGameData implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -123,9 +125,10 @@ public class SaveGameService {
 
   static final JFileChooser fileChooser = new JFileChooser();
 
+  // save state of a controller
   public static void save(final Controller controller) {
     try {
-      int userSelection = SaveGameService.fileChooser.showSaveDialog(null);
+      final int userSelection = SaveGameService.fileChooser.showSaveDialog(null);
       if (userSelection != JFileChooser.APPROVE_OPTION) {
         return;
       }
@@ -138,13 +141,13 @@ public class SaveGameService {
       oos.flush();
       oos.close();
     } catch (final Exception e) {
-      System.err.println("Error while writing to file: " + e.getMessage());
-      e.printStackTrace();
+      MessageDialog.show("Error while writing to file", e.getLocalizedMessage());
     }
   }
 
+  // load state into a controller
   public static boolean load(final Controller controller) {
-    int userSelection = SaveGameService.fileChooser.showOpenDialog(null);
+    final int userSelection = SaveGameService.fileChooser.showOpenDialog(null);
     if (userSelection != JFileChooser.APPROVE_OPTION) {
       return false;
     }
@@ -158,8 +161,7 @@ public class SaveGameService {
       ois.close();
       return true;
     } catch (final Exception e) {
-      System.err.println("Error while reading from file: " + e.getMessage());
-      e.printStackTrace();
+      MessageDialog.show("Error while reading from file", e.getLocalizedMessage());
       return false;
     }
   }

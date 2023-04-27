@@ -3,6 +3,7 @@ package de.hhn.view;
 import java.awt.event.ActionListener;
 import javax.swing.*;
 
+/** styled version of JButton */
 class SimpleButton extends JButton {
 
   public SimpleButton(final String text, final ActionListener onCLick) {
