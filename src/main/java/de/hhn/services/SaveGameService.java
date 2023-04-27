@@ -4,7 +4,6 @@ import de.hhn.controller.Controller;
 import de.hhn.lib.Vector2D;
 import de.hhn.model.CharacterKind;
 import de.hhn.model.Fraction;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
@@ -13,6 +12,7 @@ import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.InflaterInputStream;
+import javax.swing.*;
 
 public class SaveGameService {
 
@@ -121,14 +121,23 @@ public class SaveGameService {
     }
   }
 
-  private static final String SAVE_GAME_FILE = "./MaXx_SaveGame";
+  static final JFileChooser fileChooser = new JFileChooser();
 
   public static void save(final Controller controller) {
     try {
+      int userSelection = SaveGameService.fileChooser.showSaveDialog(null);
+      if (userSelection != JFileChooser.APPROVE_OPTION) {
+        return;
+      }
+      final var fileToSave = SaveGameService.fileChooser.getSelectedFile();
       final var data = new SaveGameData(controller);
-      final var out = new FileOutputStream(SaveGameService.SAVE_GAME_FILE);
+      final var out = new FileOutputStream(fileToSave);
       final var zip = new DeflaterOutputStream(out);
       final var oos = new ObjectOutputStream(zip);
+      zip.flush();
+      zip.close();
+      out.flush();
+      out.close();
       oos.writeObject(data);
       oos.flush();
       oos.close();
@@ -139,17 +148,17 @@ public class SaveGameService {
   }
 
   public static void load(final Controller controller) {
-    final var f = new File(SaveGameService.SAVE_GAME_FILE);
-    if (!f.exists() || f.isDirectory()) {
-      System.err.println("No save game file found.");
+    int userSelection = SaveGameService.fileChooser.showOpenDialog(null);
+    if (userSelection != JFileChooser.APPROVE_OPTION) {
       return;
     }
-
+    final var fileToSave = SaveGameService.fileChooser.getSelectedFile();
     try {
-      final var fileIn = new FileInputStream(f);
+      final var fileIn = new FileInputStream(fileToSave);
       final var zipIn = new InflaterInputStream(fileIn);
       final var ois = new ObjectInputStream(zipIn);
       final var data = (SaveGameData) ois.readObject();
+      zipIn.close();
       ois.close();
       fileIn.close();
       data.loadInto(controller);
