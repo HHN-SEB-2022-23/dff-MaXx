@@ -132,12 +132,8 @@ public class SaveGameService {
       final var fileToSave = SaveGameService.fileChooser.getSelectedFile();
       final var data = new SaveGameData(controller);
       final var out = new FileOutputStream(fileToSave);
-      final var zip = new DeflaterOutputStream(out);
-      final var oos = new ObjectOutputStream(zip);
-      zip.flush();
-      zip.close();
-      out.flush();
-      out.close();
+      final var zipOut = new DeflaterOutputStream(out);
+      final var oos = new ObjectOutputStream(zipOut);
       oos.writeObject(data);
       oos.flush();
       oos.close();
@@ -147,10 +143,10 @@ public class SaveGameService {
     }
   }
 
-  public static void load(final Controller controller) {
+  public static boolean load(final Controller controller) {
     int userSelection = SaveGameService.fileChooser.showOpenDialog(null);
     if (userSelection != JFileChooser.APPROVE_OPTION) {
-      return;
+      return false;
     }
     final var fileToSave = SaveGameService.fileChooser.getSelectedFile();
     try {
@@ -158,13 +154,13 @@ public class SaveGameService {
       final var zipIn = new InflaterInputStream(fileIn);
       final var ois = new ObjectInputStream(zipIn);
       final var data = (SaveGameData) ois.readObject();
-      zipIn.close();
-      ois.close();
-      fileIn.close();
       data.loadInto(controller);
+      ois.close();
+      return true;
     } catch (final Exception e) {
       System.err.println("Error while reading from file: " + e.getMessage());
       e.printStackTrace();
+      return false;
     }
   }
 }

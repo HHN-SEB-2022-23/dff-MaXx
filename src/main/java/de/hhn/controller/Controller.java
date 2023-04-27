@@ -35,7 +35,7 @@ public class Controller extends Thread implements ActionListener {
         };
     this.model = new Board();
     this.view = new GameScreen(this, wa, new ActionListeners(this));
-    this.currentPlayer = CharacterKind.WHITE;
+    this.currentPlayer = CharacterKind.BLACK;
     this.load = shouldLoadSaveGame;
   }
 
@@ -73,7 +73,10 @@ public class Controller extends Thread implements ActionListener {
   @Override
   public void run() {
     if (this.load) {
-      SaveGameService.load(this);
+      if (!SaveGameService.load(this)) {
+        this.dispose();
+        return;
+      }
     }
 
     while (this.running) {
@@ -81,7 +84,7 @@ public class Controller extends Thread implements ActionListener {
           this.model.fields,
           this.model.characterB,
           this.model.characterW,
-          this.currentPlayer = this.currentPlayer.getOpposite());
+          this.currentPlayer);
 
       // Warte aus UI Eingabe (ui thread)
       synchronized (this.lock) {
@@ -105,6 +108,7 @@ public class Controller extends Thread implements ActionListener {
       }
 
       this.currentMove = null;
+      this.currentPlayer = this.currentPlayer.getOpposite();
     }
   }
 
