@@ -140,6 +140,8 @@ public class SaveGameService {
       oos.writeObject(data);
       oos.flush();
       oos.close();
+      zipOut.close();
+      out.close();
     } catch (final Exception e) {
       MessageDialog.show("Error while writing to file", e.getLocalizedMessage());
     }
@@ -159,6 +161,8 @@ public class SaveGameService {
       final var data = (SaveGameData) ois.readObject();
       data.loadInto(controller);
       ois.close();
+      zipIn.close();
+      fileIn.close();
       return true;
     } catch (final Exception e) {
       MessageDialog.show("Error while reading from file", e.getLocalizedMessage());
